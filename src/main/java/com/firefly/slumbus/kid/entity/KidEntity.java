@@ -11,6 +11,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "kid")
 public class KidEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

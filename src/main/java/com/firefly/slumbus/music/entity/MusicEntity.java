@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "music")
 public class MusicEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

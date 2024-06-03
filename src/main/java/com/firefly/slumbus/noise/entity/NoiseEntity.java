@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "noise")
 public class NoiseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
