@@ -1,4 +1,7 @@
 package com.firefly.slumbus.kid.repository;
 
-public interface KidRepository {
+import com.firefly.slumbus.kid.entity.KidEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface KidRepository extends JpaRepository<KidEntity, Long> {
 }
