@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ResponseCode {
 
     SUCCESS_LOGIN(HttpStatus.OK, "로그인을 성공했습니다."),
+    SUCCESS_REGISTER(HttpStatus.OK, "회원가입을 성공했습니다."),
     SUCCESS_REGISTER_KID(HttpStatus.OK, "아이 등록에 성공했습니다."),
     ;
 

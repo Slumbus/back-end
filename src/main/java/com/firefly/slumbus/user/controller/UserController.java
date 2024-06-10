@@ -1,5 +1,7 @@
 package com.firefly.slumbus.user.controller;
 
+import com.firefly.slumbus.base.code.ResponseCode;
+import com.firefly.slumbus.base.dto.ResponseDTO;
 import com.firefly.slumbus.user.dto.UserDTO;
 import com.firefly.slumbus.user.entity.UserEntity;
 import com.firefly.slumbus.user.service.UserService;
@@ -25,8 +27,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDTO> loginUser(@RequestBody UserDTO userDto) {
+    public ResponseEntity<ResponseDTO> loginUser(@RequestBody UserDTO userDto) {
         UserDTO loggedInUser = userService.loginUser(userDto.getEmail(), userDto.getPassword());
-        return ResponseEntity.ok(loggedInUser);
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_REGISTER.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_REGISTER, loggedInUser));
     }
 }
