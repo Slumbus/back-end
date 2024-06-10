@@ -30,8 +30,9 @@ public class KidEntity {
     @Column(columnDefinition = "TEXT")
     private String picture;
 
-    @Column(nullable = true)
-    private Boolean gender;
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(10)")
+    private Gender gender;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

@@ -1,4 +1,10 @@
 package com.firefly.slumbus.kid.service;
 
-public class KidService {
+import com.firefly.slumbus.kid.dto.KidRequestDTO;
+import com.firefly.slumbus.kid.dto.KidResponseDTO;
+import com.firefly.slumbus.kid.entity.KidEntity;
+
+
+public interface KidService {
+    KidResponseDTO registerKid(KidRequestDTO kidRequestDTO);
 }
