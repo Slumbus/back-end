@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/users/register", "/api/users/login").permitAll() // 특정 경로는 인증 없이 접근 허용
+                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll() // 특정 경로는 인증 없이 접근 허용
                         .anyRequest().authenticated() // 다른 모든 요청은 인증 필요
                 );
 
