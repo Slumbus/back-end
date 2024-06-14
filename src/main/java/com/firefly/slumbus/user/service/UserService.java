@@ -28,6 +28,7 @@ public class UserService {
 
     public UserDTO registerUser(String email, String rawPassword) {
         String encodedPassword = passwordEncoder.encode(rawPassword);
+        System.out.println(encodedPassword);
         UserEntity user = UserEntity.builder()
                 .email(email)
                 .password(encodedPassword)
