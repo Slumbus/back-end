@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MusicDTO {
+public class MusicResponseDTO {
 
-    private String user;
+    private Long userId;
 
-    private String kid;
+    private Long kidId;
 
     private String music;
 
