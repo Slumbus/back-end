@@ -39,6 +39,17 @@ public class KidController {
         return new ResponseDTO<>(ResponseCode.SUCCESS_GET_KID_DETAIL, kidDetails);
     }
 
+//    @PutMapping("/{kidId}")
+//    public ResponseDTO<KidResponseDTO> updateKid(@RequestParam("kidId") Long kidId, @RequestBody KidRequestDTO kidRequestDTO) {
+//        try {
+//            KidResponseDTO updateKid = kidService.updateKid(kidId, kidRequestDTO);
+//            return new ResponseDTO<>(ResponseCode.SUCCESS_UPDATE_KID, updateKid);
+//        } catch (Exception e) {
+//            String message = e.getMessage();
+//            return new ResponseDTO<>(0, "실패", message, null);
+//        }
+//    }
+
     @DeleteMapping("/{kidId}")
     public ResponseDTO<Long> deleteKid(@PathVariable("kidId") Long kidId) {
         kidService.deleteKid(kidId);

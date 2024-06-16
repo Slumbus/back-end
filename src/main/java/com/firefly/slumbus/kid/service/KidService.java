@@ -11,5 +11,6 @@ public interface KidService {
     KidResponseDTO registerKid(KidRequestDTO kidRequestDTO);
     List<KidResponseDTO> getKidList();
     KidResponseDTO getKidDetails(Long kidId);
+//    KidResponseDTO updateKid(Long kidId, KidRequestDTO kidRequestDTO);
     void deleteKid(Long kidId);
 }
