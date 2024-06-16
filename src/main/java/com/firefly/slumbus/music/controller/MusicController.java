@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/song")
@@ -30,5 +32,22 @@ public class MusicController {
             return new ResponseDTO<>(0, "실패", message, null);
         }
     }
+
+    @GetMapping("/composition/{musicId}")
+    public ResponseDTO<MusicResponseDTO> getMusicDetails(@PathVariable("musicId") Long musicId) {
+
+        MusicResponseDTO musicDetails = musicService.getMusicDetails(musicId);
+
+        return new ResponseDTO<>(ResponseCode.SUCCESS_GET_MUSIC_DETAIL, musicDetails);
+    }
+
+    @GetMapping("/list/{kidId}")
+    public ResponseDTO<List<MusicResponseDTO>> getMusicListByKidId(@PathVariable("kidId") Long kidId) {
+
+        List<MusicResponseDTO> musicList = musicService.getMusicListByKidId(kidId);
+
+        return new ResponseDTO<>(ResponseCode.SUCCESS_GET_MUSIC_LIST, musicList);
+    }
+
 
 }

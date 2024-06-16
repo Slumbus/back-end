@@ -14,6 +14,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +52,37 @@ public class MusicServiceImpl implements MusicService {
                 .picture(musicDTO.getPicture())
                 .lyric(musicDTO.getLyric())
                 .build();
+    }
+
+    public MusicResponseDTO getMusicDetails(Long musicId) {
+        MusicEntity music = musicRepository.findById(musicId).orElseThrow(() -> new RuntimeException("Music not found"));
+
+        return MusicResponseDTO.builder()
+                .userId(music.getUser().getUserId())
+                .kidId(music.getKid().getKidId())
+                .music(music.getMusic())
+                .title(music.getTitle())
+                .picture(music.getPicture())
+                .lyric(music.getLyric())
+                .build();
+    }
+
+    public List<MusicResponseDTO> getMusicListByKidId(Long kidId) {
+
+        Optional<KidEntity> kid = kidRepository.findById(kidId);
+        List<MusicEntity> musicList = musicRepository.findByKid(kid.get());
+
+        return musicList.stream()
+                .map(music -> MusicResponseDTO.builder()
+                        .userId(music.getUser().getUserId())
+                        .kidId(music.getKid().getKidId())
+                        .music(music.getMusic())
+                        .title(music.getTitle())
+                        .picture(music.getTitle())
+                        .picture(music.getPicture())
+                        .lyric(music.getLyric())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 }
