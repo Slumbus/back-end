@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,6 +35,12 @@ public class KidController {
     @GetMapping("")
     public ResponseDTO<List<KidResponseDTO>> getKidList() {
         List<KidResponseDTO> kidList = kidService.getKidList();
-        return new ResponseDTO<>(ResponseCode.SUCCESS_GET_KIDLIST, kidList);
+        return new ResponseDTO<>(ResponseCode.SUCCESS_GET_KID_LIST, kidList);
+    }
+
+    @GetMapping("/{kidId}")
+    public ResponseDTO<KidResponseDTO> getKidDetails(@PathVariable("kidId") Long kidId) {
+        KidResponseDTO kidDetails = kidService.getKidDetails(kidId);
+        return new ResponseDTO<>(ResponseCode.SUCCESS_GET_KID_DETAIL, kidDetails);
     }
 }

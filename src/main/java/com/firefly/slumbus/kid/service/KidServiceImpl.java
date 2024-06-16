@@ -68,9 +68,7 @@ public class KidServiceImpl implements KidService{
     @Override
     public List<KidResponseDTO> getKidList() {
         Long userId = getCurrentUserId();
-        System.out.println(userId);
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+
         return kidRepository.findByUser_userId(userId).stream()
                 .map(kid -> KidResponseDTO.builder()
                         .userId(kid.getUser().getUserId())
@@ -81,6 +79,21 @@ public class KidServiceImpl implements KidService{
                         .gender(kid.getGender())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public KidResponseDTO getKidDetails(Long kidId) {
+        KidEntity kid = kidRepository.findById(kidId)
+                .orElseThrow(() -> new RuntimeException("Kid not found or access denied"));
+
+        return KidResponseDTO.builder()
+                .userId(kid.getUser().getUserId())
+                .kidId(kid.getKidId())
+                .name(kid.getName())
+                .birth(kid.getBirth())
+                .picture(kid.getPicture())
+                .gender(kid.getGender())
+                .build();
     }
 
 }

@@ -10,4 +10,5 @@ import java.util.List;
 public interface KidService {
     KidResponseDTO registerKid(KidRequestDTO kidRequestDTO);
     List<KidResponseDTO> getKidList();
+    KidResponseDTO getKidDetails(Long kidId);
 }
