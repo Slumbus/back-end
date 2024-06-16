@@ -85,4 +85,10 @@ public class MusicServiceImpl implements MusicService {
                 .collect(Collectors.toList());
     }
 
+    public void deleteMusic(Long musicId) {
+
+        MusicEntity music = musicRepository.findById(musicId).orElseThrow(() -> new RuntimeException("Music not found"));
+
+        musicRepository.delete(music);
+    }
 }

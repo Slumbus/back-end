@@ -50,4 +50,11 @@ public class MusicController {
     }
 
 
+    @DeleteMapping("/{musicId}")
+    public ResponseDTO<Long> deleteMusic(@PathVariable("musicId") Long musicId) {
+
+        musicService.deleteMusic(musicId);
+
+        return new ResponseDTO<>(ResponseCode.SUCCESS_DELETE_MUSIC, musicId);
+    }
 }
