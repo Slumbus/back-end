@@ -7,12 +7,7 @@ import com.firefly.slumbus.kid.dto.KidResponseDTO;
 import com.firefly.slumbus.kid.entity.KidEntity;
 import com.firefly.slumbus.kid.service.KidService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -42,5 +37,11 @@ public class KidController {
     public ResponseDTO<KidResponseDTO> getKidDetails(@PathVariable("kidId") Long kidId) {
         KidResponseDTO kidDetails = kidService.getKidDetails(kidId);
         return new ResponseDTO<>(ResponseCode.SUCCESS_GET_KID_DETAIL, kidDetails);
+    }
+
+    @DeleteMapping("/{kidId}")
+    public ResponseDTO<Long> deleteKid(@PathVariable("kidId") Long kidId) {
+        kidService.deleteKid(kidId);
+        return new ResponseDTO<>(ResponseCode.SUCCESS_DELETE_KID, kidId);
     }
 }

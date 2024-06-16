@@ -5,6 +5,8 @@ import com.firefly.slumbus.kid.dto.KidResponseDTO;
 import com.firefly.slumbus.kid.entity.Gender;
 import com.firefly.slumbus.kid.entity.KidEntity;
 import com.firefly.slumbus.kid.repository.KidRepository;
+import com.firefly.slumbus.music.entity.MusicEntity;
+import com.firefly.slumbus.music.repository.MusicRepository;
 import com.firefly.slumbus.user.entity.UserEntity;
 import com.firefly.slumbus.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.firefly.slumbus.base.UserAuthorizationUtil.getCurrentUserId;
@@ -22,6 +25,7 @@ public class KidServiceImpl implements KidService{
 
     private final KidRepository kidRepository;
     private final UserRepository userRepository;
+    private final MusicRepository musicRepository;
 
     @Override
     public KidResponseDTO registerKid(KidRequestDTO kidRequestDTO) {
@@ -84,7 +88,7 @@ public class KidServiceImpl implements KidService{
     @Override
     public KidResponseDTO getKidDetails(Long kidId) {
         KidEntity kid = kidRepository.findById(kidId)
-                .orElseThrow(() -> new RuntimeException("Kid not found or access denied"));
+                .orElseThrow(() -> new RuntimeException("Kid not found"));
 
         return KidResponseDTO.builder()
                 .userId(kid.getUser().getUserId())
@@ -94,6 +98,19 @@ public class KidServiceImpl implements KidService{
                 .picture(kid.getPicture())
                 .gender(kid.getGender())
                 .build();
+    }
+
+    @Override
+    public void deleteKid(Long kidId) {
+        KidEntity kid = kidRepository.findById(kidId)
+                .orElseThrow(() -> new RuntimeException("Kid not found"));
+
+        List<MusicEntity> musicList = musicRepository.findByKid(kid);
+        for (MusicEntity music : musicList) {
+            musicRepository.deleteById(music.getMusicId());
+        }
+
+        kidRepository.delete(kid);
     }
 
 }
