@@ -8,9 +8,15 @@ import com.firefly.slumbus.kid.entity.KidEntity;
 import com.firefly.slumbus.kid.service.KidService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+import static com.firefly.slumbus.base.UserAuthorizationUtil.getCurrentUserId;
 
 
 @RestController
@@ -24,5 +30,11 @@ public class KidController {
     public ResponseDTO<KidResponseDTO> registerKid(@RequestBody KidRequestDTO kidRequestDTO) {
         KidResponseDTO registeredKid = kidService.registerKid(kidRequestDTO);
         return new ResponseDTO<>(ResponseCode.SUCCESS_REGISTER_KID, registeredKid);
+    }
+
+    @GetMapping("")
+    public ResponseDTO<List<KidResponseDTO>> getKidList() {
+        List<KidResponseDTO> kidList = kidService.getKidList();
+        return new ResponseDTO<>(ResponseCode.SUCCESS_GET_KIDLIST, kidList);
     }
 }

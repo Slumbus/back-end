@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.firefly.slumbus.base.UserAuthorizationUtil.getCurrentUserId;
 
@@ -61,6 +63,24 @@ public class KidServiceImpl implements KidService{
                 .picture(savedKid.getPicture())
                 .gender(savedKid.getGender())
                 .build();
+    }
+
+    @Override
+    public List<KidResponseDTO> getKidList() {
+        Long userId = getCurrentUserId();
+        System.out.println(userId);
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+        return kidRepository.findByUser_userId(userId).stream()
+                .map(kid -> KidResponseDTO.builder()
+                        .userId(kid.getUser().getUserId())
+                        .kidId(kid.getKidId())
+                        .name(kid.getName())
+                        .birth(kid.getBirth())
+                        .picture(kid.getPicture())
+                        .gender(kid.getGender())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 }
