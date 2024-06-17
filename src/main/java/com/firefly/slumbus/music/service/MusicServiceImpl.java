@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.firefly.slumbus.base.UserAuthorizationUtil.getCurrentUserId;
+
 @Service
 @RequiredArgsConstructor
 public class MusicServiceImpl implements MusicService {
@@ -26,7 +28,9 @@ public class MusicServiceImpl implements MusicService {
     private final KidRepository kidRepository;
     private final MusicRepository musicRepository;
 
-    public MusicResponseDTO saveMusic(Long userId, MusicRequestDTO musicDTO) {
+    public MusicResponseDTO saveMusic(MusicRequestDTO musicDTO) {
+
+        Long userId = getCurrentUserId();
 
         UserEntity findUser = userRepository.findById(userId).get();
         KidEntity findKid = kidRepository.findById(musicDTO.getKidId()).get();

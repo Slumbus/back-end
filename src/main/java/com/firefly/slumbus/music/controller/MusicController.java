@@ -20,11 +20,11 @@ public class MusicController {
     private final MusicService musicService;
 
     @PostMapping("/composition")
-    public ResponseDTO<MusicResponseDTO> saveMusic(@RequestParam("userId") Long userId, @RequestBody MusicRequestDTO musicRequestDTO) {
+    public ResponseDTO<MusicResponseDTO> saveMusic(@RequestBody MusicRequestDTO musicRequestDTO) {
 
         try {
 
-            MusicResponseDTO savedMusic = musicService.saveMusic(userId, musicRequestDTO);
+            MusicResponseDTO savedMusic = musicService.saveMusic(musicRequestDTO);
 
             return new ResponseDTO<>(ResponseCode.SUCCESS_SAVE_MUSIC, savedMusic);
         } catch (Exception e) {

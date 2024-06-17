@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MusicService {
 
-    MusicResponseDTO saveMusic(Long userId, MusicRequestDTO musicDTO);
+    MusicResponseDTO saveMusic(MusicRequestDTO musicDTO);
     MusicResponseDTO getMusicDetails(Long musicId);
     List<MusicResponseDTO> getMusicListByKidId(Long kidId);
     void deleteMusic(Long musicId);
