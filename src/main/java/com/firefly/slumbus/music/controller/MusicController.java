@@ -20,11 +20,11 @@ public class MusicController {
     private final MusicService musicService;
 
     @PostMapping("/composition")
-    public ResponseDTO<MusicResponseDTO> saveMusic(@RequestParam("userId") Long userId, @RequestBody MusicRequestDTO musicRequestDTO) {
+    public ResponseDTO<MusicResponseDTO> saveMusic(@RequestBody MusicRequestDTO musicRequestDTO) {
 
         try {
 
-            MusicResponseDTO savedMusic = musicService.saveMusic(userId, musicRequestDTO);
+            MusicResponseDTO savedMusic = musicService.saveMusic(musicRequestDTO);
 
             return new ResponseDTO<>(ResponseCode.SUCCESS_SAVE_MUSIC, savedMusic);
         } catch (Exception e) {
@@ -49,6 +49,13 @@ public class MusicController {
         return new ResponseDTO<>(ResponseCode.SUCCESS_GET_MUSIC_LIST, musicList);
     }
 
+    @PutMapping("/{musicId}")
+    public ResponseDTO<MusicResponseDTO> updateMusic(@PathVariable("musicId") Long musicId, @RequestBody MusicRequestDTO musicRequestDTO) {
+
+        MusicResponseDTO updateMusic = musicService.updateMusic(musicId, musicRequestDTO);
+
+        return new ResponseDTO<>(ResponseCode.SUCCESS_UPDATE_MUSIC, updateMusic);
+    }
 
     @DeleteMapping("/{musicId}")
     public ResponseDTO<Long> deleteMusic(@PathVariable("musicId") Long musicId) {
