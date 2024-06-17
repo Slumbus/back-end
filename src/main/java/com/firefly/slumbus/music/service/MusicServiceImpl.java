@@ -82,11 +82,28 @@ public class MusicServiceImpl implements MusicService {
                         .kidId(music.getKid().getKidId())
                         .music(music.getMusic())
                         .title(music.getTitle())
-                        .picture(music.getTitle())
                         .picture(music.getPicture())
                         .lyric(music.getLyric())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public MusicResponseDTO updateMusic(Long musicId, MusicRequestDTO musicDTO) {
+        MusicEntity music = musicRepository.findById(musicId).orElseThrow(() -> new RuntimeException("Music Not found"));
+
+        music.setTitle(musicDTO.getTitle());
+        music.setPicture(musicDTO.getPicture());
+
+        musicRepository.save(music);
+
+        return MusicResponseDTO.builder()
+                .userId(music.getUser().getUserId())
+                .kidId(music.getKid().getKidId())
+                .music(music.getMusic())
+                .title(music.getTitle())
+                .picture(music.getPicture())
+                .lyric(music.getLyric())
+                .build();
     }
 
     public void deleteMusic(Long musicId) {

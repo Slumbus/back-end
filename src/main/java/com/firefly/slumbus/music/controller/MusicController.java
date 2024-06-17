@@ -49,6 +49,13 @@ public class MusicController {
         return new ResponseDTO<>(ResponseCode.SUCCESS_GET_MUSIC_LIST, musicList);
     }
 
+    @PutMapping("/{musicId}")
+    public ResponseDTO<MusicResponseDTO> updateMusic(@PathVariable("musicId") Long musicId, @RequestBody MusicRequestDTO musicRequestDTO) {
+
+        MusicResponseDTO updateMusic = musicService.updateMusic(musicId, musicRequestDTO);
+
+        return new ResponseDTO<>(ResponseCode.SUCCESS_UPDATE_MUSIC, updateMusic);
+    }
 
     @DeleteMapping("/{musicId}")
     public ResponseDTO<Long> deleteMusic(@PathVariable("musicId") Long musicId) {
