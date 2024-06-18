@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/register",
                                 "/api/auth/login",
                                 "/api/auth/**").permitAll() // 특정 경로는 인증 없이 접근 허용
+                        .requestMatchers(AuthenticatedMatchers.swaggerArray).permitAll()
                         .anyRequest().authenticated() // 다른 모든 요청은 인증 필요
                 );
 
