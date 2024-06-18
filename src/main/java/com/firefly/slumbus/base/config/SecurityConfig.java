@@ -23,10 +23,6 @@ import java.util.List;
 public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
-//    public SecurityConfig(JwtFilter jwtFilter) {
-//        this.jwtFilter = jwtFilter;
-//    }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -37,12 +33,12 @@ public class SecurityConfig {
         http
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(c -> c.disable())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/register",
                                 "/api/auth/login",
-                                "/api/auth/email").permitAll() // 특정 경로는 인증 없이 접근 허용
+                                "/api/auth/**").permitAll() // 특정 경로는 인증 없이 접근 허용
                         .anyRequest().authenticated() // 다른 모든 요청은 인증 필요
                 );
 
