@@ -13,4 +13,6 @@ public interface MusicService {
     List<MusicResponseDTO> getMusicListByKidId(Long kidId);
     MusicResponseDTO updateMusic(Long musicId, MusicRequestDTO musicDTO);
     void deleteMusic(Long musicId);
+    MusicResponseDTO updateLyric(Long musicId, String lyric);
+    MusicResponseDTO updateMusicColumn(Long musicId, String Music);
 }

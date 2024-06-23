@@ -112,4 +112,38 @@ public class MusicServiceImpl implements MusicService {
 
         musicRepository.delete(music);
     }
+
+    public MusicResponseDTO updateLyric(Long musicId, String lyric) {
+
+        MusicEntity music = musicRepository.findById(musicId).orElseThrow(() -> new RuntimeException("Music not found"));
+
+        music.setLyric(lyric);
+        musicRepository.save(music);
+
+        return MusicResponseDTO.builder()
+                .userId(music.getUser().getUserId())
+                .kidId(music.getKid().getKidId())
+                .music(music.getMusic())
+                .title(music.getTitle())
+                .picture(music.getPicture())
+                .lyric(music.getLyric())
+                .build();
+    }
+
+    public MusicResponseDTO updateMusicColumn(Long musicId, String musicLink) {
+
+        MusicEntity music = musicRepository.findById(musicId).orElseThrow(() -> new RuntimeException("Music not found"));
+
+        music.setMusic(musicLink);
+        musicRepository.save(music);
+
+        return MusicResponseDTO.builder()
+                .userId(music.getUser().getUserId())
+                .kidId(music.getKid().getKidId())
+                .music(music.getMusic())
+                .title(music.getTitle())
+                .picture(music.getPicture())
+                .lyric(music.getLyric())
+                .build();
+    }
 }

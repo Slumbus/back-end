@@ -22,6 +22,8 @@ public enum ResponseCode {
     SUCCESS_GET_MUSIC_LIST(HttpStatus.OK, "자장가 목록 조회에 성공했습니다."),
     SUCCESS_UPDATE_MUSIC(HttpStatus.OK, "자장가 수정에 성공했습니다."),
     SUCCESS_DELETE_MUSIC(HttpStatus.OK, "자장가 삭제를 성공했습니다."),
+    SUCCESS_PUT_LYRIC(HttpStatus.OK, "작사 저장에 성공했습니다."),
+    SUCCESS_SAVE_COMPLETE_MUSIC(HttpStatus.OK, "최종 자장가 음악 저장을 성공했습니다."),
     ;
 
     private final HttpStatus status;
