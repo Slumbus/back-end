@@ -1,5 +1,7 @@
 package com.firefly.slumbus.user.service;
 
+import com.firefly.slumbus.base.exception.BadRequestException;
+import com.firefly.slumbus.base.exception.ConflictException;
 import com.firefly.slumbus.user.dto.request.UserRequestDTO;
 import com.firefly.slumbus.user.entity.UserEntity;
 import com.firefly.slumbus.user.repository.UserRepository;
@@ -14,6 +16,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
+
+import static com.firefly.slumbus.base.code.ErrorCode.DUPLICATE_USER;
+import static com.firefly.slumbus.base.code.ErrorCode.INVALID_MAIL_CODE;
 
 @Service
 public class RegisterService {
@@ -40,7 +45,7 @@ public class RegisterService {
      */
     public Long registerUser(UserRequestDTO request) {
 
-        validateDuplicateMember(request);
+        validateDuplicateMember(request.getEmail());
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
@@ -57,11 +62,15 @@ public class RegisterService {
         return user.getUserId();
     }
 
-    private void validateDuplicateMember(UserRequestDTO request) {
-        Optional<UserEntity> existingUser = userRepository.findByEmail(request.getEmail());
-        // 이미 존재하는 이메일이면 가입 불가
+    /**
+     * 이미 가입된 회원 여부 확인
+     */
+
+    private void validateDuplicateMember(String email) {
+        Optional<UserEntity> existingUser = userRepository.findByEmail(email);
+
         if (existingUser.isPresent()) {
-            throw new IllegalArgumentException("이미 가입된 유저입니다.");
+            throw new ConflictException(DUPLICATE_USER);
         }
     }
 
@@ -69,20 +78,13 @@ public class RegisterService {
      * 이메일 인증
      */
     public void sendCodeToEmail(String toEmail) {
-        this.checkDuplicatedEmail(toEmail);
+        this.validateDuplicateMember(toEmail);
         String title = "Slumbus 이메일 인증 번호";
         String authCode = this.createCode();
         mailService.sendEmail(toEmail, title, authCode);
-        // 이메일 인증 요청 시 인증 번호 Redis에 저장 ( key = "AuthCode " + Email / value = AuthCode )
-        redisService.setValues(AUTH_CODE_PREFIX + toEmail,
+        // 이메일 인증 요청 시 인증 번호 Redis에 저장 ( key = Email / value = AuthCode )
+        redisService.setValues( toEmail,
                 authCode, Duration.ofMillis(this.authCodeExpirationMillis));
-    }
-
-    private void checkDuplicatedEmail(String email) {
-        Optional<UserEntity> existingUser = userRepository.findByEmail(email);
-        if (existingUser.isPresent()) {
-            throw new IllegalArgumentException("이미 가입된 유저입니다.");
-        }
     }
 
     private String createCode() {
@@ -100,12 +102,15 @@ public class RegisterService {
     }
 
     public boolean verifiedCode(String email, String authCode) {
-        this.checkDuplicatedEmail(email);
+        this.validateDuplicateMember(email);
         String redisAuthCode = redisService.getValues(AUTH_CODE_PREFIX + email);
         boolean authResult = redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(authCode);
 
-        //return EmailVerificationResult.of(authResult);
-        return authResult;
+        if (!authResult) {
+            throw new BadRequestException(INVALID_MAIL_CODE);
+        } else {
+            return true;
+        }
     }
 
 }
