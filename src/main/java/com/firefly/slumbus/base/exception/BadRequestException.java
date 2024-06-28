@@ -1,7 +1,9 @@
 package com.firefly.slumbus.base.exception;
 
 import com.firefly.slumbus.base.code.ErrorCode;
+import lombok.Getter;
 
+@Getter
 public class BadRequestException extends RuntimeException {
 
     private final ErrorCode errorCode;
@@ -12,10 +14,6 @@ public class BadRequestException extends RuntimeException {
 
     public BadRequestException(ErrorCode errorCode) {
         this.errorCode = errorCode;
-    }
-
-    public ErrorCode getErrorCode() {
-        return errorCode;
     }
 
 }
