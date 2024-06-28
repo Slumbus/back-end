@@ -1,7 +1,9 @@
 package com.firefly.slumbus.base.exception;
 
 import com.firefly.slumbus.base.code.ErrorCode;
+import lombok.Getter;
 
+@Getter
 public class ConflictException extends RuntimeException {
 
     private final ErrorCode errorCode;
@@ -14,7 +16,4 @@ public class ConflictException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    public ErrorCode getErrorCode() {
-        return errorCode;
-    }
 }
