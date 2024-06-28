@@ -2,10 +2,7 @@ package com.firefly.slumbus.base.exception.handler;
 
 import com.firefly.slumbus.base.code.ErrorCode;
 import com.firefly.slumbus.base.dto.ErrorResponseDTO;
-import com.firefly.slumbus.base.exception.BadRequestException;
-import com.firefly.slumbus.base.exception.ConflictException;
-import com.firefly.slumbus.base.exception.InvalidValueException;
-import com.firefly.slumbus.base.exception.UserNotFoundException;
+import com.firefly.slumbus.base.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +41,14 @@ public class CustomExceptionHandler {
     @ExceptionHandler(InvalidValueException.class)
     protected ResponseEntity<ErrorResponseDTO> handleInvalidValueException(final InvalidValueException e) {
         log.error("handleInvalidValueException: {}", e.getMessage());
+        return ResponseEntity
+                .status(e.getErrorCode().getStatus().value())
+                .body(new ErrorResponseDTO(e.getErrorCode()));
+    }
+
+    @ExceptionHandler(InternalServerException.class)
+    protected ResponseEntity<ErrorResponseDTO> handleInternalServerException(final InternalServerException e) {
+        log.error("handleInternalServerException: {}", e.getMessage());
         return ResponseEntity
                 .status(e.getErrorCode().getStatus().value())
                 .body(new ErrorResponseDTO(e.getErrorCode()));
