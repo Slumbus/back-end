@@ -1,6 +1,7 @@
 package com.firefly.slumbus.music.controller;
 
 import com.firefly.slumbus.base.code.ResponseCode;
+import com.firefly.slumbus.base.config.S3Service;
 import com.firefly.slumbus.base.dto.ResponseDTO;
 import com.firefly.slumbus.music.dto.MusicRequestDTO;
 import com.firefly.slumbus.music.dto.MusicResponseDTO;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,12 +20,21 @@ import java.util.List;
 public class MusicController {
 
     private final MusicService musicService;
+    private final S3Service s3Service;
 
     // 작곡 후 저장
     @PostMapping("/composition")
-    public ResponseDTO<MusicResponseDTO> saveMusic(@RequestBody MusicRequestDTO musicRequestDTO) {
+    public ResponseDTO<MusicResponseDTO> saveMusic(@RequestPart("musicDTO") MusicRequestDTO musicRequestDTO,
+                                                   @RequestPart("musicFile") MultipartFile musicFile,
+                                                   @RequestPart("image") MultipartFile albumImage) {
 
         try {
+
+            // 음악 파일 & 앨범자켓 이미지 s3에 업로드
+            String musicURL = s3Service.uploadMusic(musicFile);
+            String imageURL = s3Service.uploadImage(albumImage);
+            musicRequestDTO.setMusic(musicURL);
+            musicRequestDTO.setPicture(imageURL);
 
             MusicResponseDTO savedMusic = musicService.saveMusic(musicRequestDTO);
 
@@ -54,8 +65,12 @@ public class MusicController {
 
     // 자장가 수정(제목, 앨범자켓)
     @PutMapping("/{musicId}")
-    public ResponseDTO<MusicResponseDTO> updateMusic(@PathVariable("musicId") Long musicId, @RequestBody MusicRequestDTO musicRequestDTO) {
+    public ResponseDTO<MusicResponseDTO> updateMusic(@PathVariable("musicId") Long musicId,
+                                                     @RequestPart("musicDTO") MusicRequestDTO musicRequestDTO,
+                                                     @RequestPart("image") MultipartFile albumImage) {
 
+        String imageURL = s3Service.uploadImage(albumImage);
+        musicRequestDTO.setPicture(imageURL);
         MusicResponseDTO updatedMusic = musicService.updateMusic(musicId, musicRequestDTO);
 
         return new ResponseDTO<>(ResponseCode.SUCCESS_UPDATE_MUSIC, updatedMusic);
@@ -81,9 +96,11 @@ public class MusicController {
 
     // 자장가 최종 음악(가사 녹음 합본) 저장
     @PatchMapping("/update/{musicId}")
-    public ResponseDTO<MusicResponseDTO> updateMusicColumn(@PathVariable("musicId") Long musicId, @RequestParam("music") String music) {
+    public ResponseDTO<MusicResponseDTO> updateMusicColumn(@PathVariable("musicId") Long musicId, @RequestPart("musicFile") MultipartFile musicFile) {
 
-        MusicResponseDTO updatedMusic = musicService.updateMusicColumn(musicId, music);
+        String musicURL = s3Service.uploadMusic(musicFile);
+
+        MusicResponseDTO updatedMusic = musicService.updateMusicColumn(musicId, musicURL);
 
         return new ResponseDTO<>(ResponseCode.SUCCESS_SAVE_COMPLETE_MUSIC, updatedMusic);
     }
