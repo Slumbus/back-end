@@ -32,4 +32,9 @@ public class UserEntity {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+        //this.updatedAt = LocalDateTime.now();
+    }
+
 }

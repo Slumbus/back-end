@@ -26,6 +26,7 @@ public enum ResponseCode {
     SUCCESS_SAVE_COMPLETE_MUSIC(HttpStatus.OK, "최종 자장가 음악 저장을 성공했습니다."),
     SUCCESS_GET_MY_PAGE(HttpStatus.OK, "마이페이지 조회에 성공했습니다."),
     SUCCESS_UPDATE_PROFILE(HttpStatus.OK, "프로필 수정에 성공했습니다."),
+    SUCCESS_UPDATE_PASSWORD(HttpStatus.OK, "비밀번호 변경에 성공했습니다."),
     ;
 
     private final HttpStatus status;

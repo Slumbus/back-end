@@ -30,4 +30,13 @@ public class MyPageController {
         MyPageResponseDTO myPageResponseDTO = myPageService.updateProfile(imageURL);
         return new ResponseDTO<>(ResponseCode.SUCCESS_UPDATE_PROFILE, myPageResponseDTO);
     }
+
+    @PatchMapping("/password")
+    public ResponseDTO<?> changePassword(@RequestParam("origin") String originPassword,
+                                         @RequestParam("new") String newPassword ) {
+        Long userId = getCurrentUserId();
+        boolean response = myPageService.patchPassword(userId, originPassword, newPassword);
+        return new ResponseDTO<>(ResponseCode.SUCCESS_UPDATE_PASSWORD, response);
+
+    }
 }

@@ -41,4 +41,12 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }
+
+    public boolean patchPassword(UserRequestDTO request) {
+        UserEntity user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        user.updatePassword(passwordEncoder.encode(request.getPassword()));
+        return true;
+    }
 }
