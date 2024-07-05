@@ -73,4 +73,13 @@ public class UserController {
                     .body(new ErrorResponseDTO(ErrorCode.USER_NOT_FOUND));
         }
     }
+
+    @PatchMapping("/password")
+    public ResponseEntity<?> changePassword(@RequestBody UserRequestDTO userDto) {
+        boolean response = userService.patchPassword(userDto);
+
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_UPDATE_PASSWORD.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_UPDATE_PASSWORD, response));
+    }
 }
