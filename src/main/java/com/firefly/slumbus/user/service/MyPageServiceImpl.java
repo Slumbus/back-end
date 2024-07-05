@@ -35,6 +35,7 @@ public class MyPageServiceImpl implements MyPageService {
         userRepository.save((userEntity));
 
         return new MyPageResponseDTO(userEntity.getEmail(), userEntity.getPicture());
+    }
 
     @Override
     public boolean patchPassword(Long userId, String originPassword, String newPassword) {
