@@ -15,6 +15,7 @@ public enum ErrorCode {
     USER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "이미 존재하는 유저입니다."),
     INVALID_MAIL_CODE(HttpStatus.BAD_REQUEST, "인증 코드가 일치하지 않습니다."),
     INVALID_IMAGE_TYPE(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일입니다."),
+    INVALID_ORIGIN_PASSWORD(HttpStatus.BAD_REQUEST, "기존 비밀번호가 일치하지 않습니다."),
 
     /**
      * 401 Unauthorized
