@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static com.firefly.slumbus.base.UserAuthorizationUtil.getCurrentUserId;
 import static com.firefly.slumbus.base.code.ErrorCode.INVALID_ORIGIN_PASSWORD;
 
 @Service
@@ -17,11 +18,23 @@ public class MyPageServiceImpl implements MyPageService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public MyPageResponseDTO getUserById(Long userId) {
+    public MyPageResponseDTO getUserById() {
+        Long userId = getCurrentUserId();
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다." + userId));
         return new MyPageResponseDTO(userEntity.getEmail(), userEntity.getPicture());
     }
+
+    @Override
+    public MyPageResponseDTO updateProfile(String imageURL) {
+        Long userId = getCurrentUserId();
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다." + userId));
+        userEntity.setPicture(imageURL);
+
+        userRepository.save((userEntity));
+
+        return new MyPageResponseDTO(userEntity.getEmail(), userEntity.getPicture());
 
     @Override
     public boolean patchPassword(Long userId, String originPassword, String newPassword) {
