@@ -101,6 +101,29 @@ public class KidServiceImpl implements KidService{
     }
 
     @Override
+    public KidResponseDTO updateKid(Long kidId, KidRequestDTO kidRequestDTO) {
+        KidEntity kid = kidRepository.findById(kidId)
+                .orElseThrow(() -> new RuntimeException("Kid not found"));
+        Long userId = getCurrentUserId();
+
+        kid.setName(kidRequestDTO.getName());
+        kid.setBirth(kidRequestDTO.getBirth());
+        kid.setGender(convertGender(kidRequestDTO.getGender()));
+        kid.setPicture(kidRequestDTO.getPicture());
+
+        KidEntity updatedKid = kidRepository.save(kid);
+        return new KidResponseDTO(userId, kidId, updatedKid.getName(), updatedKid.getBirth(), updatedKid.getPicture(), updatedKid.getGender());
+    }
+
+    private Gender convertGender(Integer genderCode) {
+        return switch (genderCode) {
+            case 1 -> Gender.MALE;
+            case 2 -> Gender.FEMALE;
+            default -> Gender.NONE;
+        };
+    }
+
+    @Override
     public void deleteKid(Long kidId) {
         KidEntity kid = kidRepository.findById(kidId)
                 .orElseThrow(() -> new RuntimeException("Kid not found"));
