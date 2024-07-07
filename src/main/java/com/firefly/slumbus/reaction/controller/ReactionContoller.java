@@ -8,6 +8,8 @@ import com.firefly.slumbus.reaction.service.ReactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/reaction")
@@ -18,5 +20,11 @@ public class ReactionContoller {
     public ResponseDTO<ReactionResponseDTO> saveReaction(@PathVariable Long kidId, @PathVariable Long musicId, @RequestBody ReactionRequestDTO reactionRequestDTO) {
         ReactionResponseDTO reaction = reactionService.saveReaction(kidId, musicId, reactionRequestDTO);
         return new ResponseDTO<>(ResponseCode.SUCCESS_SAVE_REACTION, reaction);
+    }
+
+    @GetMapping("/kid/{kidId}")
+    public ResponseDTO<List<ReactionResponseDTO>> getReactionList(@PathVariable Long kidId) {
+        List<ReactionResponseDTO> reactionList = reactionService.getReactionList(kidId);
+        return new ResponseDTO<>(ResponseCode.SUCCESS_GET_REACTION_LIST, reactionList);
     }
 }

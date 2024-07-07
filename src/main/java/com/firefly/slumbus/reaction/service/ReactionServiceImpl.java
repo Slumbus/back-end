@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -69,5 +71,18 @@ public class ReactionServiceImpl implements ReactionService {
                 .emoji(savedReaction.getEmoji())
                 .comment(savedReaction.getComment())
                 .build();
+    }
+
+    @Override
+    public List<ReactionResponseDTO> getReactionList(Long kidId) {
+        return reactionRepository.findByKid_KidId(kidId).stream()
+                .map(reaction -> ReactionResponseDTO.builder()
+                        .reactId(reaction.getReactId())
+                        .kidId(reaction.getKid().getKidId())
+                        .musicId(reaction.getMusic().getMusicId())
+                        .emoji(reaction.getEmoji())
+                        .comment(reaction.getComment())
+                        .build())
+                .collect(Collectors.toList());
     }
 }
