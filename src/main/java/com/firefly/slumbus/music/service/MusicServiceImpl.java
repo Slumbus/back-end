@@ -168,6 +168,7 @@ public class MusicServiceImpl implements MusicService {
             return HomeResponseDTO.builder()
                     .kidId(kid.getKidId())
                     .kidName(kid.getName())
+                    .kidPicture(kid.getPicture())
                     .musicList(musicList)
                     .build();
         }).collect(Collectors.toList());

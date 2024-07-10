@@ -11,6 +11,7 @@ public class HomeResponseDTO {
 
     private Long kidId;
     private String kidName;
+    private String kidPicture;
     private List<MusicResponseDTO> musicList;
 
 }
