@@ -3,6 +3,7 @@ package com.firefly.slumbus.music.controller;
 import com.firefly.slumbus.base.code.ResponseCode;
 import com.firefly.slumbus.base.config.S3Service;
 import com.firefly.slumbus.base.dto.ResponseDTO;
+import com.firefly.slumbus.music.dto.HomeResponseDTO;
 import com.firefly.slumbus.music.dto.MusicRequestDTO;
 import com.firefly.slumbus.music.dto.MusicResponseDTO;
 import com.firefly.slumbus.music.service.MusicService;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import static com.firefly.slumbus.base.UserAuthorizationUtil.getCurrentUserId;
 
 @RestController
 @RequiredArgsConstructor
@@ -103,5 +106,16 @@ public class MusicController {
         MusicResponseDTO updatedMusic = musicService.updateMusicColumn(musicId, musicURL);
 
         return new ResponseDTO<>(ResponseCode.SUCCESS_SAVE_COMPLETE_MUSIC, updatedMusic);
+    }
+
+    // 홈화면 - 유저별 자장가 목록 조회(모두)
+    @GetMapping("/home")
+    public ResponseDTO<List<HomeResponseDTO>> getMusicListAll() {
+
+        Long userId = getCurrentUserId();
+
+        List<HomeResponseDTO> musicList = musicService.getMusicListAll(userId);
+
+        return new ResponseDTO<>(ResponseCode.SUCCESS_GET_MUSIC_LIST, musicList);
     }
 }
