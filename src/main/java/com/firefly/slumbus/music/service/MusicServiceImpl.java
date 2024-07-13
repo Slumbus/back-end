@@ -51,9 +51,10 @@ public class MusicServiceImpl implements MusicService {
         return MusicResponseDTO.builder()
                 .userId(findUser.getUserId())
                 .kidId(findKid.getKidId())
-                .music(musicDTO.getMusic())
+                .id(music.getMusicId())
+                .url(musicDTO.getMusic())
                 .title(musicDTO.getTitle())
-                .picture(musicDTO.getPicture())
+                .artwork(musicDTO.getPicture())
                 .lyric(musicDTO.getLyric())
                 .build();
     }
@@ -64,9 +65,10 @@ public class MusicServiceImpl implements MusicService {
         return MusicResponseDTO.builder()
                 .userId(music.getUser().getUserId())
                 .kidId(music.getKid().getKidId())
-                .music(music.getMusic())
+                .id(musicId)
+                .url(music.getMusic())
                 .title(music.getTitle())
-                .picture(music.getPicture())
+                .artwork(music.getPicture())
                 .lyric(music.getLyric())
                 .build();
     }
@@ -80,9 +82,10 @@ public class MusicServiceImpl implements MusicService {
                 .map(music -> MusicResponseDTO.builder()
                         .userId(music.getUser().getUserId())
                         .kidId(music.getKid().getKidId())
-                        .music(music.getMusic())
+                        .id(music.getMusicId())
+                        .url(music.getMusic())
                         .title(music.getTitle())
-                        .picture(music.getPicture())
+                        .artwork(music.getPicture())
                         .lyric(music.getLyric())
                         .build())
                 .collect(Collectors.toList());
@@ -99,9 +102,10 @@ public class MusicServiceImpl implements MusicService {
         return MusicResponseDTO.builder()
                 .userId(music.getUser().getUserId())
                 .kidId(music.getKid().getKidId())
-                .music(music.getMusic())
+                .id(music.getMusicId())
+                .url(music.getMusic())
                 .title(music.getTitle())
-                .picture(music.getPicture())
+                .artwork(music.getPicture())
                 .lyric(music.getLyric())
                 .build();
     }
@@ -123,9 +127,10 @@ public class MusicServiceImpl implements MusicService {
         return MusicResponseDTO.builder()
                 .userId(music.getUser().getUserId())
                 .kidId(music.getKid().getKidId())
-                .music(music.getMusic())
+                .id(music.getMusicId())
+                .url(music.getMusic())
                 .title(music.getTitle())
-                .picture(music.getPicture())
+                .artwork(music.getPicture())
                 .lyric(music.getLyric())
                 .build();
     }
@@ -140,9 +145,10 @@ public class MusicServiceImpl implements MusicService {
         return MusicResponseDTO.builder()
                 .userId(music.getUser().getUserId())
                 .kidId(music.getKid().getKidId())
-                .music(music.getMusic())
+                .id(music.getMusicId())
+                .url(music.getMusic())
                 .title(music.getTitle())
-                .picture(music.getPicture())
+                .artwork(music.getPicture())
                 .lyric(music.getLyric())
                 .build();
     }
@@ -157,9 +163,10 @@ public class MusicServiceImpl implements MusicService {
                     .map(music -> MusicResponseDTO.builder()
                             .userId(music.getUser().getUserId())
                             .kidId(music.getKid().getKidId())
-                            .music(music.getMusic())
+                            .id(music.getMusicId())
+                            .url(music.getMusic())
                             .title(music.getTitle())
-                            .picture(music.getPicture())
+                            .artwork(music.getPicture())
                             .lyric(music.getLyric())
                             .build())
                     .collect(Collectors.toList());

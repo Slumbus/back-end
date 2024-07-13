@@ -15,11 +15,13 @@ public class MusicResponseDTO {
 
     private Long kidId;
 
-    private String music;
+    private Long id;
+
+    private String url;
 
     private String title;
 
-    private String picture;
+    private String artwork;
 
     private String lyric;
 }
