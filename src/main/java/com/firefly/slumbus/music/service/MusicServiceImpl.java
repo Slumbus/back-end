@@ -2,6 +2,7 @@ package com.firefly.slumbus.music.service;
 
 import com.firefly.slumbus.kid.entity.KidEntity;
 import com.firefly.slumbus.kid.repository.KidRepository;
+import com.firefly.slumbus.music.dto.HomeMusicResponseDTO;
 import com.firefly.slumbus.music.dto.HomeResponseDTO;
 import com.firefly.slumbus.music.dto.MusicRequestDTO;
 import com.firefly.slumbus.music.dto.MusicResponseDTO;
@@ -159,11 +160,9 @@ public class MusicServiceImpl implements MusicService {
         List<KidEntity> kids = kidRepository.findByUser_userId(userId);
 
         return kids.stream().map(kid -> {
-            List<MusicResponseDTO> musicList = musicRepository.findByKid(kid).stream()
-                    .map(music -> MusicResponseDTO.builder()
-                            .userId(music.getUser().getUserId())
-                            .kidId(music.getKid().getKidId())
-                            .id(music.getMusicId())
+            List<HomeMusicResponseDTO> musicList = musicRepository.findByKid(kid).stream()
+                    .map(music -> HomeMusicResponseDTO.builder()
+                            .musicId(music.getMusicId())
                             .url(music.getMusic())
                             .title(music.getTitle())
                             .artwork(music.getPicture())
