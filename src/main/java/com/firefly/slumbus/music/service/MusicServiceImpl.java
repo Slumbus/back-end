@@ -10,9 +10,8 @@ import com.firefly.slumbus.music.repository.MusicRepository;
 import com.firefly.slumbus.user.entity.UserEntity;
 import com.firefly.slumbus.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -52,9 +51,10 @@ public class MusicServiceImpl implements MusicService {
         return MusicResponseDTO.builder()
                 .userId(findUser.getUserId())
                 .kidId(findKid.getKidId())
-                .music(musicDTO.getMusic())
+                .id(music.getMusicId())
+                .url(musicDTO.getMusic())
                 .title(musicDTO.getTitle())
-                .picture(musicDTO.getPicture())
+                .artwork(musicDTO.getPicture())
                 .lyric(musicDTO.getLyric())
                 .build();
     }
@@ -65,9 +65,10 @@ public class MusicServiceImpl implements MusicService {
         return MusicResponseDTO.builder()
                 .userId(music.getUser().getUserId())
                 .kidId(music.getKid().getKidId())
-                .music(music.getMusic())
+                .id(musicId)
+                .url(music.getMusic())
                 .title(music.getTitle())
-                .picture(music.getPicture())
+                .artwork(music.getPicture())
                 .lyric(music.getLyric())
                 .build();
     }
@@ -81,9 +82,10 @@ public class MusicServiceImpl implements MusicService {
                 .map(music -> MusicResponseDTO.builder()
                         .userId(music.getUser().getUserId())
                         .kidId(music.getKid().getKidId())
-                        .music(music.getMusic())
+                        .id(music.getMusicId())
+                        .url(music.getMusic())
                         .title(music.getTitle())
-                        .picture(music.getPicture())
+                        .artwork(music.getPicture())
                         .lyric(music.getLyric())
                         .build())
                 .collect(Collectors.toList());
@@ -100,9 +102,10 @@ public class MusicServiceImpl implements MusicService {
         return MusicResponseDTO.builder()
                 .userId(music.getUser().getUserId())
                 .kidId(music.getKid().getKidId())
-                .music(music.getMusic())
+                .id(music.getMusicId())
+                .url(music.getMusic())
                 .title(music.getTitle())
-                .picture(music.getPicture())
+                .artwork(music.getPicture())
                 .lyric(music.getLyric())
                 .build();
     }
@@ -124,9 +127,10 @@ public class MusicServiceImpl implements MusicService {
         return MusicResponseDTO.builder()
                 .userId(music.getUser().getUserId())
                 .kidId(music.getKid().getKidId())
-                .music(music.getMusic())
+                .id(music.getMusicId())
+                .url(music.getMusic())
                 .title(music.getTitle())
-                .picture(music.getPicture())
+                .artwork(music.getPicture())
                 .lyric(music.getLyric())
                 .build();
     }
@@ -141,9 +145,10 @@ public class MusicServiceImpl implements MusicService {
         return MusicResponseDTO.builder()
                 .userId(music.getUser().getUserId())
                 .kidId(music.getKid().getKidId())
-                .music(music.getMusic())
+                .id(music.getMusicId())
+                .url(music.getMusic())
                 .title(music.getTitle())
-                .picture(music.getPicture())
+                .artwork(music.getPicture())
                 .lyric(music.getLyric())
                 .build();
     }
@@ -158,9 +163,10 @@ public class MusicServiceImpl implements MusicService {
                     .map(music -> MusicResponseDTO.builder()
                             .userId(music.getUser().getUserId())
                             .kidId(music.getKid().getKidId())
-                            .music(music.getMusic())
+                            .id(music.getMusicId())
+                            .url(music.getMusic())
                             .title(music.getTitle())
-                            .picture(music.getPicture())
+                            .artwork(music.getPicture())
                             .lyric(music.getLyric())
                             .build())
                     .collect(Collectors.toList());
@@ -173,4 +179,11 @@ public class MusicServiceImpl implements MusicService {
                     .build();
         }).collect(Collectors.toList());
     }
+
+    @Override
+    public String makeMusic(String mood, String instrument, MultipartFile humming) {
+
+        return "https://slumbus.s3.ap-southeast-2.amazonaws.com/music/077de29c-ae28-4116-92a9-ebef20bbc343.mp3";
+    }
+
 }

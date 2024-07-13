@@ -1,14 +1,18 @@
 package com.firefly.slumbus.music.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firefly.slumbus.base.code.ResponseCode;
 import com.firefly.slumbus.base.config.S3Service;
 import com.firefly.slumbus.base.dto.ResponseDTO;
 import com.firefly.slumbus.music.dto.HomeResponseDTO;
+import com.firefly.slumbus.music.dto.MusicOptionsDTO;
 import com.firefly.slumbus.music.dto.MusicRequestDTO;
 import com.firefly.slumbus.music.dto.MusicResponseDTO;
 import com.firefly.slumbus.music.service.MusicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -118,4 +122,19 @@ public class MusicController {
 
         return new ResponseDTO<>(ResponseCode.SUCCESS_GET_MUSIC_LIST, musicList);
     }
+
+    //생성형 AI로 자장가 생성
+    @PostMapping("/compose")
+    public ResponseEntity<ResponseDTO> writeSong(@RequestParam("options") String musicOptions, @RequestParam("humming") MultipartFile humming) throws JsonProcessingException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        MusicOptionsDTO musicOptionsDTO = mapper.readValue(musicOptions, MusicOptionsDTO.class);
+
+        String music = musicService.makeMusic(musicOptionsDTO.getMood(), musicOptionsDTO.getInstrument(), humming);
+
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_COMPOSE_MUSIC.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_COMPOSE_MUSIC, music));
+    }
+
 }

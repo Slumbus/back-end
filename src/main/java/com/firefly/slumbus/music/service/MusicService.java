@@ -4,6 +4,7 @@ import com.firefly.slumbus.music.dto.HomeResponseDTO;
 import com.firefly.slumbus.music.dto.MusicRequestDTO;
 import com.firefly.slumbus.music.dto.MusicResponseDTO;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,4 +18,5 @@ public interface MusicService {
     MusicResponseDTO updateLyric(Long musicId, String lyric);
     MusicResponseDTO updateMusicColumn(Long musicId, String Music);
     List<HomeResponseDTO> getMusicListAll(Long userId);
+    String makeMusic(String mood, String instrument, MultipartFile humming);
 }
