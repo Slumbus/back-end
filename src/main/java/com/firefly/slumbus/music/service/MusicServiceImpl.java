@@ -10,9 +10,8 @@ import com.firefly.slumbus.music.repository.MusicRepository;
 import com.firefly.slumbus.user.entity.UserEntity;
 import com.firefly.slumbus.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -173,4 +172,11 @@ public class MusicServiceImpl implements MusicService {
                     .build();
         }).collect(Collectors.toList());
     }
+
+    @Override
+    public String makeMusic(String mood, String instrument, MultipartFile humming) {
+
+        return "https://slumbus.s3.ap-southeast-2.amazonaws.com/music/077de29c-ae28-4116-92a9-ebef20bbc343.mp3";
+    }
+
 }
