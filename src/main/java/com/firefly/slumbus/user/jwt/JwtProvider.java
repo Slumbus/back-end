@@ -23,7 +23,7 @@ public class JwtProvider {
 
     public String generateJwtToken(Long userId, long expireTime) {
         final Date now = new Date();
-        final Date expiration = new Date(now.getTime() + expireTime);
+        final Date expiration = new Date(now.getTime() + expireTime * 1000);
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)

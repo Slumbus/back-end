@@ -14,7 +14,9 @@ import com.firefly.slumbus.reaction.repository.ReactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -82,6 +84,8 @@ public class ReactionServiceImpl implements ReactionService {
         Map<Long, List<ReactionEntity>> groupedByMusicId = reactions.stream()
                 .collect(Collectors.groupingBy(reaction -> reaction.getMusic().getMusicId()));
 
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
         return groupedByMusicId.entrySet().stream()
                 .map(entry -> {
                     Long musicId = entry.getKey();
@@ -93,6 +97,7 @@ public class ReactionServiceImpl implements ReactionService {
                                     .reactId(reaction.getReactId())
                                     .emoji(reaction.getEmoji())
                                     .comment(reaction.getComment())
+                                    .createdAt(reaction.getCreatedAt().format(dateTimeFormatter))
                                     .build())
                             .collect(Collectors.toList());
 
