@@ -2,6 +2,7 @@ package com.firefly.slumbus.reaction.controller;
 
 import com.firefly.slumbus.base.code.ResponseCode;
 import com.firefly.slumbus.base.dto.ResponseDTO;
+import com.firefly.slumbus.reaction.dto.ReactionListResponseDTO;
 import com.firefly.slumbus.reaction.dto.ReactionRequestDTO;
 import com.firefly.slumbus.reaction.dto.ReactionResponseDTO;
 import com.firefly.slumbus.reaction.service.ReactionService;
@@ -23,8 +24,8 @@ public class ReactionContoller {
     }
 
     @GetMapping("/kid/{kidId}")
-    public ResponseDTO<List<ReactionResponseDTO>> getReactionList(@PathVariable Long kidId) {
-        List<ReactionResponseDTO> reactionList = reactionService.getReactionList(kidId);
+    public ResponseDTO<List<ReactionListResponseDTO>> getReactionList(@PathVariable Long kidId) {
+        List<ReactionListResponseDTO> reactionList = reactionService.getReactionList(kidId);
         return new ResponseDTO<>(ResponseCode.SUCCESS_GET_REACTION_LIST, reactionList);
     }
 }
