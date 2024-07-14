@@ -5,18 +5,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firefly.slumbus.base.code.ResponseCode;
 import com.firefly.slumbus.base.config.S3Service;
 import com.firefly.slumbus.base.dto.ResponseDTO;
+import com.firefly.slumbus.music.dto.LyricsRequestDTO;
+import com.firefly.slumbus.music.dto.LyricsResponseDTO;
 import com.firefly.slumbus.music.dto.HomeResponseDTO;
 import com.firefly.slumbus.music.dto.MusicOptionsDTO;
 import com.firefly.slumbus.music.dto.MusicRequestDTO;
 import com.firefly.slumbus.music.dto.MusicResponseDTO;
 import com.firefly.slumbus.music.service.MusicService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.*;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static com.firefly.slumbus.base.UserAuthorizationUtil.getCurrentUserId;
@@ -25,6 +31,9 @@ import static com.firefly.slumbus.base.UserAuthorizationUtil.getCurrentUserId;
 @RequiredArgsConstructor
 @RequestMapping("/api/song")
 public class MusicController {
+
+    private static final String FLASK_API_URL = "http://localhost:5000/lyrics/write";
+    private final ObjectMapper objectMapper;
 
     private final MusicService musicService;
     private final S3Service s3Service;
@@ -110,6 +119,37 @@ public class MusicController {
         MusicResponseDTO updatedMusic = musicService.updateMusicColumn(musicId, musicURL);
 
         return new ResponseDTO<>(ResponseCode.SUCCESS_SAVE_COMPLETE_MUSIC, updatedMusic);
+    }
+
+    // chatGPT 통해 가사 생성
+    @PostMapping("/genLyrics")
+    public ResponseEntity<String> generateLyrics(@RequestBody LyricsRequestDTO input) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setAcceptCharset(List.of(StandardCharsets.UTF_8));
+
+            String requestBody = objectMapper.writeValueAsString(input);
+
+            HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters()
+                    .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+            ResponseEntity<String> response = restTemplate.postForEntity(FLASK_API_URL, entity, String.class);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(new String(response.getBody().getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8));
+            } else {
+                return ResponseEntity.status(response.getStatusCode())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(new String(response.getBody().getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     // 홈화면 - 유저별 자장가 목록 조회(모두)
