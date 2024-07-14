@@ -5,17 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Builder
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MusicResponseDTO {
+public class HomeMusicResponseDTO {
 
-    private Long userId;
-
-    private Long kidId;
-
-    private Long id;
+    private Long musicId;
 
     private String url;
 
@@ -24,4 +20,5 @@ public class MusicResponseDTO {
     private String artwork;
 
     private String lyric;
+
 }
