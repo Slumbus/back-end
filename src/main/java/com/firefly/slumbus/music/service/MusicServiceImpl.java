@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -159,6 +160,8 @@ public class MusicServiceImpl implements MusicService {
 
         List<KidEntity> kids = kidRepository.findByUser_userId(userId);
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
         return kids.stream().map(kid -> {
             List<HomeMusicResponseDTO> musicList = musicRepository.findByKid(kid).stream()
                     .map(music -> HomeMusicResponseDTO.builder()
@@ -174,6 +177,8 @@ public class MusicServiceImpl implements MusicService {
                     .kidId(kid.getKidId())
                     .kidName(kid.getName())
                     .kidPicture(kid.getPicture())
+                    .kidBirth(dateFormat.format(kid.getBirth()))
+                    .kidGender(kid.getGender())
                     .musicList(musicList)
                     .build();
         }).collect(Collectors.toList());

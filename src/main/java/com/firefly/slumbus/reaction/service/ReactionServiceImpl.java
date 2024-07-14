@@ -5,6 +5,7 @@ import com.firefly.slumbus.kid.repository.KidRepository;
 
 import com.firefly.slumbus.music.entity.MusicEntity;
 import com.firefly.slumbus.music.repository.MusicRepository;
+import com.firefly.slumbus.reaction.dto.ReactionListResponseDTO;
 import com.firefly.slumbus.reaction.dto.ReactionRequestDTO;
 import com.firefly.slumbus.reaction.dto.ReactionResponseDTO;
 import com.firefly.slumbus.reaction.entity.Emoji;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,21 +70,39 @@ public class ReactionServiceImpl implements ReactionService {
                 .reactId(savedReaction.getReactId())
                 .kidId(savedReaction.getKid().getKidId())
                 .musicId(savedReaction.getMusic().getMusicId())
+                .musicTitle(savedReaction.getMusic().getTitle())
                 .emoji(savedReaction.getEmoji())
                 .comment(savedReaction.getComment())
                 .build();
     }
 
     @Override
-    public List<ReactionResponseDTO> getReactionList(Long kidId) {
-        return reactionRepository.findByKid_KidId(kidId).stream()
-                .map(reaction -> ReactionResponseDTO.builder()
-                        .reactId(reaction.getReactId())
-                        .kidId(reaction.getKid().getKidId())
-                        .musicId(reaction.getMusic().getMusicId())
-                        .emoji(reaction.getEmoji())
-                        .comment(reaction.getComment())
-                        .build())
+    public List<ReactionListResponseDTO> getReactionList(Long kidId) {
+        List<ReactionEntity> reactions = reactionRepository.findByKid_KidId(kidId);
+        Map<Long, List<ReactionEntity>> groupedByMusicId = reactions.stream()
+                .collect(Collectors.groupingBy(reaction -> reaction.getMusic().getMusicId()));
+
+        return groupedByMusicId.entrySet().stream()
+                .map(entry -> {
+                    Long musicId = entry.getKey();
+                    List<ReactionEntity> reactionEntities = entry.getValue();
+                    MusicEntity music = reactionEntities.get(0).getMusic();
+
+                    List<ReactionListResponseDTO.ReactionDetailDTO> reactionDetails = reactionEntities.stream()
+                            .map(reaction -> ReactionListResponseDTO.ReactionDetailDTO.builder()
+                                    .reactId(reaction.getReactId())
+                                    .emoji(reaction.getEmoji())
+                                    .comment(reaction.getComment())
+                                    .build())
+                            .collect(Collectors.toList());
+
+                    return ReactionListResponseDTO.builder()
+                            .kidId(kidId)
+                            .musicId(musicId)
+                            .musicTitle(music.getTitle())
+                            .reactions(reactionDetails)
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
 }
