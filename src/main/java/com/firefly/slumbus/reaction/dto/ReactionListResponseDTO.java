@@ -26,5 +26,6 @@ public class ReactionListResponseDTO {
         private Long reactId;
         private Emoji emoji;
         private String comment;
+        private String createdAt;
     }
 }
