@@ -1,6 +1,7 @@
 package com.firefly.slumbus.kid.controller;
 
 import com.firefly.slumbus.base.code.ResponseCode;
+import com.firefly.slumbus.base.config.S3Service;
 import com.firefly.slumbus.base.dto.ResponseDTO;
 import com.firefly.slumbus.kid.dto.KidRequestDTO;
 import com.firefly.slumbus.kid.dto.KidResponseDTO;
@@ -8,6 +9,7 @@ import com.firefly.slumbus.kid.entity.KidEntity;
 import com.firefly.slumbus.kid.service.KidService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,9 +22,14 @@ import static com.firefly.slumbus.base.UserAuthorizationUtil.getCurrentUserId;
 public class KidController {
 
     private final KidService kidService;
+    private final S3Service s3Service;
 
     @PostMapping("")
-    public ResponseDTO<KidResponseDTO> registerKid(@RequestBody KidRequestDTO kidRequestDTO) {
+    public ResponseDTO<KidResponseDTO> registerKid(@RequestPart("kidDTO") KidRequestDTO kidRequestDTO,
+                                                   @RequestPart("image") MultipartFile kidImage) {
+
+        String imageURL = s3Service.uploadImage(kidImage);
+        kidRequestDTO.setPicture(imageURL);
         KidResponseDTO registeredKid = kidService.registerKid(kidRequestDTO);
         return new ResponseDTO<>(ResponseCode.SUCCESS_REGISTER_KID, registeredKid);
     }
