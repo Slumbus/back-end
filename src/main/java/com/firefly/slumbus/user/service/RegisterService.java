@@ -103,7 +103,7 @@ public class RegisterService {
 
     public boolean verifiedCode(String email, String authCode) {
         this.validateDuplicateMember(email);
-        String redisAuthCode = redisService.getValues(AUTH_CODE_PREFIX + email);
+        String redisAuthCode = redisService.getValues(email);
         boolean authResult = redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(authCode);
 
         if (!authResult) {
