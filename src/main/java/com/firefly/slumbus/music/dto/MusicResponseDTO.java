@@ -17,6 +17,8 @@ public class MusicResponseDTO {
 
     private Long id;
 
+    private String kidName;
+
     private String url;
 
     private String title;

@@ -48,6 +48,15 @@ public class UserController {
                 .body(new ResponseDTO<>(ResponseCode.SUCCESS_SEND_CODE, email));
     }
 
+    @PostMapping("/resend-email")
+    public ResponseEntity<?> reSendEmail(@RequestParam("email") String email) {
+        registerService.resendCodeToEmail(email);
+
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_SEND_CODE.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_SEND_CODE, email));
+    }
+
     @GetMapping("/check-code")
     public ResponseEntity verificationEmail(@RequestParam("email") String email,
                                             @RequestParam("code") String authCode) {
