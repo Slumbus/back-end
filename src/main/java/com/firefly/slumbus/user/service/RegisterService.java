@@ -87,6 +87,17 @@ public class RegisterService {
                 authCode, Duration.ofMillis(this.authCodeExpirationMillis));
     }
 
+    public void resendCodeToEmail(String toEmail) {
+        // 기존 인증 코드 삭제
+        redisService.deleteValues(toEmail);
+        // 새로운 인증 코드 저장
+        String title = "Slumbus 이메일 인증 번호";
+        String newAuthCode = this.createCode();
+        mailService.sendEmail(toEmail, title, newAuthCode);
+        redisService.setValues( toEmail,
+                newAuthCode, Duration.ofMillis(this.authCodeExpirationMillis));
+    }
+
     private String createCode() {
         int lenth = 6;
         try {
