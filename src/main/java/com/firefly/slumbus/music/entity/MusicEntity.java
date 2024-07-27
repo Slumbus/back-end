@@ -1,10 +1,12 @@
 package com.firefly.slumbus.music.entity;
 
 import com.firefly.slumbus.kid.entity.KidEntity;
+import com.firefly.slumbus.reaction.entity.ReactionEntity;
 import com.firefly.slumbus.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -43,4 +45,7 @@ public class MusicEntity {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "music", cascade = CascadeType.REMOVE)
+    private List<ReactionEntity> reactions;
 }

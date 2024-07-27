@@ -106,10 +106,10 @@ public class KidServiceImpl implements KidService{
                 .orElseThrow(() -> new RuntimeException("Kid not found"));
         Long userId = getCurrentUserId();
 
-        kid.setName(kidRequestDTO.getName());
-        kid.setBirth(kidRequestDTO.getBirth());
-        kid.setGender(convertGender(kidRequestDTO.getGender()));
-        kid.setPicture(kidRequestDTO.getPicture());
+        if (kidRequestDTO.getName() != null) kid.setName(kidRequestDTO.getName());
+        if (kidRequestDTO.getBirth() != null) kid.setBirth(kidRequestDTO.getBirth());
+        if (kidRequestDTO.getGender() != null) kid.setGender(convertGender(kidRequestDTO.getGender()));
+        if (kidRequestDTO.getPicture() != null) kid.setPicture(kidRequestDTO.getPicture());
 
         KidEntity updatedKid = kidRepository.save(kid);
         return new KidResponseDTO(userId, kidId, updatedKid.getName(), updatedKid.getBirth(), updatedKid.getPicture(), updatedKid.getGender());
@@ -128,10 +128,10 @@ public class KidServiceImpl implements KidService{
         KidEntity kid = kidRepository.findById(kidId)
                 .orElseThrow(() -> new RuntimeException("Kid not found"));
 
-        List<MusicEntity> musicList = musicRepository.findByKid(kid);
-        for (MusicEntity music : musicList) {
-            musicRepository.deleteById(music.getMusicId());
-        }
+//        List<MusicEntity> musicList = musicRepository.findByKid(kid);
+//        for (MusicEntity music : musicList) {
+//            musicRepository.deleteById(music.getMusicId());
+//        }
 
         kidRepository.delete(kid);
     }
