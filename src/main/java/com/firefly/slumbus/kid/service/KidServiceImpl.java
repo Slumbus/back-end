@@ -128,10 +128,10 @@ public class KidServiceImpl implements KidService{
         KidEntity kid = kidRepository.findById(kidId)
                 .orElseThrow(() -> new RuntimeException("Kid not found"));
 
-        List<MusicEntity> musicList = musicRepository.findByKid(kid);
-        for (MusicEntity music : musicList) {
-            musicRepository.deleteById(music.getMusicId());
-        }
+//        List<MusicEntity> musicList = musicRepository.findByKid(kid);
+//        for (MusicEntity music : musicList) {
+//            musicRepository.deleteById(music.getMusicId());
+//        }
 
         kidRepository.delete(kid);
     }
