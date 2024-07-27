@@ -46,9 +46,17 @@ public class KidController {
         return new ResponseDTO<>(ResponseCode.SUCCESS_GET_KID_DETAIL, kidDetails);
     }
 
-    @PutMapping("/{kidId}")
-    public ResponseDTO<KidResponseDTO> updateKid(@PathVariable("kidId") Long kidId, @RequestBody KidRequestDTO kidRequestDTO) {
+    @PatchMapping("/{kidId}")
+    public ResponseDTO<KidResponseDTO> updateKid(
+            @PathVariable("kidId") Long kidId,
+            @RequestPart(value = "image", required = false) MultipartFile kidImage,
+            @RequestPart("kidDTO") KidRequestDTO kidRequestDTO) {
         try {
+            String imageURL = null;
+            if (kidImage != null && !kidImage.isEmpty()) {
+                imageURL = s3Service.uploadImage(kidImage);
+                kidRequestDTO.setPicture(imageURL);
+            }
             KidResponseDTO updateKid = kidService.updateKid(kidId, kidRequestDTO);
             return new ResponseDTO<>(ResponseCode.SUCCESS_UPDATE_KID, updateKid);
         } catch (Exception e) {
