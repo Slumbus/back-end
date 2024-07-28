@@ -8,6 +8,9 @@ import com.firefly.slumbus.base.dto.ResponseDTO;
 import com.firefly.slumbus.music.dto.*;
 import com.firefly.slumbus.music.service.MusicService;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.http.*;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.HttpStatus;
@@ -165,12 +168,14 @@ public class MusicController {
 
     //생성형 AI로 자장가 생성
     @PostMapping("/compose")
-    public ResponseEntity<ResponseDTO> writeSong(@RequestParam("options") String musicOptions, @RequestParam("humming") MultipartFile humming) throws JsonProcessingException {
+    public ResponseEntity<ResponseDTO> writeSong(@RequestParam("options") String musicOptions, @RequestParam("humming") MultipartFile humming) throws JsonProcessingException, ParseException {
 
         ObjectMapper mapper = new ObjectMapper();
         MusicOptionsDTO musicOptionsDTO = mapper.readValue(musicOptions, MusicOptionsDTO.class);
 
-        String music = musicService.makeMusic(musicOptionsDTO.getMood(), musicOptionsDTO.getInstrument(), humming);
+        String res = musicService.makeMusic(musicOptionsDTO.getMood(), musicOptionsDTO.getInstrument(), humming);
+        JSONParser parser = new JSONParser();
+        JSONObject music = (JSONObject) parser.parse(res);
 
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_COMPOSE_MUSIC.getStatus().value())

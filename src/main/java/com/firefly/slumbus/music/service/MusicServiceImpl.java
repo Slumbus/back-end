@@ -11,8 +11,13 @@ import com.firefly.slumbus.music.repository.MusicRepository;
 import com.firefly.slumbus.user.entity.UserEntity;
 import com.firefly.slumbus.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -29,6 +34,8 @@ public class MusicServiceImpl implements MusicService {
     private final UserRepository userRepository;
     private final KidRepository kidRepository;
     private final MusicRepository musicRepository;
+    private final WebClient.Builder webClientBuilder;
+
 
     public MusicResponseDTO saveMusic(MusicRequestDTO musicDTO) {
 
@@ -186,8 +193,20 @@ public class MusicServiceImpl implements MusicService {
 
     @Override
     public String makeMusic(String mood, String instrument, MultipartFile humming) {
+        String url = "http://127.0.0.1:5000/compose/music";
 
-        return "https://slumbus.s3.ap-southeast-2.amazonaws.com/music/077de29c-ae28-4116-92a9-ebef20bbc343.mp3";
+        WebClient webClient = webClientBuilder.baseUrl(url).build();
+
+        Mono<String> responseMono = webClient.post()
+                .uri(url)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData("mood", mood)
+                        .with("instrument", instrument)
+                        .with("file", humming.getResource()))
+                .retrieve()
+                .bodyToMono(String.class);
+
+        return responseMono.block();
     }
 
 }
