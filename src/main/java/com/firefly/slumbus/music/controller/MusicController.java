@@ -37,7 +37,7 @@ public class MusicController {
     @PostMapping("/composition")
     public ResponseDTO<MusicResponseDTO> saveMusic(@RequestParam("musicDTO") String musicDTOString,
 //                                                   @RequestPart("musicFile") MultipartFile musicFile,
-                                                   @RequestParam("image") MultipartFile albumImage) {
+                                                   @RequestParam(value = "image", required = false) MultipartFile albumImage) {
 
         try {
 
