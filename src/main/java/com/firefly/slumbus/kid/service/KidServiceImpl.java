@@ -109,7 +109,7 @@ public class KidServiceImpl implements KidService{
         if (kidRequestDTO.getName() != null) kid.setName(kidRequestDTO.getName());
         if (kidRequestDTO.getBirth() != null) kid.setBirth(kidRequestDTO.getBirth());
         if (kidRequestDTO.getGender() != null) kid.setGender(convertGender(kidRequestDTO.getGender()));
-        if (kidRequestDTO.getPicture() != null) kid.setPicture(kidRequestDTO.getPicture());
+        kid.setPicture(kidRequestDTO.getPicture());
 
         KidEntity updatedKid = kidRepository.save(kid);
         return new KidResponseDTO(userId, kidId, updatedKid.getName(), updatedKid.getBirth(), updatedKid.getPicture(), updatedKid.getGender());
