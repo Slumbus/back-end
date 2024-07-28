@@ -26,7 +26,7 @@ public class KidController {
 
     @PostMapping("")
     public ResponseDTO<KidResponseDTO> registerKid(@RequestPart("kidDTO") KidRequestDTO kidRequestDTO,
-                                                   @RequestPart("image") MultipartFile kidImage) {
+                                                   @RequestPart(value = "image", required = false) MultipartFile kidImage) {
 
         String imageURL = null;
         if (kidImage != null && !kidImage.isEmpty()) {
