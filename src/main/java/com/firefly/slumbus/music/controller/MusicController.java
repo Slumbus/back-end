@@ -5,12 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firefly.slumbus.base.code.ResponseCode;
 import com.firefly.slumbus.base.config.S3Service;
 import com.firefly.slumbus.base.dto.ResponseDTO;
-import com.firefly.slumbus.music.dto.LyricsRequestDTO;
-import com.firefly.slumbus.music.dto.LyricsResponseDTO;
-import com.firefly.slumbus.music.dto.HomeResponseDTO;
-import com.firefly.slumbus.music.dto.MusicOptionsDTO;
-import com.firefly.slumbus.music.dto.MusicRequestDTO;
-import com.firefly.slumbus.music.dto.MusicResponseDTO;
+import com.firefly.slumbus.music.dto.*;
 import com.firefly.slumbus.music.service.MusicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
@@ -40,18 +35,23 @@ public class MusicController {
 
     // 작곡 후 저장
     @PostMapping("/composition")
-    public ResponseDTO<MusicResponseDTO> saveMusic(@RequestPart("musicDTO") MusicRequestDTO musicRequestDTO,
-                                                   @RequestPart("musicFile") MultipartFile musicFile,
-                                                   @RequestPart("image") MultipartFile albumImage) {
+    public ResponseDTO<MusicResponseDTO> saveMusic(@RequestParam("musicDTO") String musicDTOString,
+//                                                   @RequestPart("musicFile") MultipartFile musicFile,
+                                                   @RequestParam("image") MultipartFile albumImage) {
 
         try {
 
-            // 음악 파일 & 앨범자켓 이미지 s3에 업로드
-            String musicURL = s3Service.uploadMusic(musicFile);
-            String imageURL = s3Service.uploadImage(albumImage);
-            musicRequestDTO.setMusic(musicURL);
-            musicRequestDTO.setPicture(imageURL);
+            // 음악 파일 s3에 업로드
+//            String musicURL = s3Service.uploadMusic(musicFile);
+//            musicRequestDTO.setMusic(musicURL);
+            ObjectMapper mapper = new ObjectMapper();
+            MusicRequestDTO musicRequestDTO = mapper.readValue(musicDTOString, MusicRequestDTO.class);
 
+            String imageURL = null;
+            if (albumImage != null && !albumImage.isEmpty()) {
+                imageURL = s3Service.uploadImage(albumImage);
+            }
+            musicRequestDTO.setPicture(imageURL);
             MusicResponseDTO savedMusic = musicService.saveMusic(musicRequestDTO);
 
             return new ResponseDTO<>(ResponseCode.SUCCESS_SAVE_MUSIC, savedMusic);
