@@ -28,7 +28,10 @@ public class KidController {
     public ResponseDTO<KidResponseDTO> registerKid(@RequestPart("kidDTO") KidRequestDTO kidRequestDTO,
                                                    @RequestPart("image") MultipartFile kidImage) {
 
-        String imageURL = s3Service.uploadImage(kidImage);
+        String imageURL = null;
+        if (kidImage != null && !kidImage.isEmpty()) {
+            imageURL = s3Service.uploadImage(kidImage);
+        }
         kidRequestDTO.setPicture(imageURL);
         KidResponseDTO registeredKid = kidService.registerKid(kidRequestDTO);
         return new ResponseDTO<>(ResponseCode.SUCCESS_REGISTER_KID, registeredKid);
@@ -55,8 +58,8 @@ public class KidController {
             String imageURL = null;
             if (kidImage != null && !kidImage.isEmpty()) {
                 imageURL = s3Service.uploadImage(kidImage);
-                kidRequestDTO.setPicture(imageURL);
             }
+            kidRequestDTO.setPicture(imageURL);
             KidResponseDTO updateKid = kidService.updateKid(kidId, kidRequestDTO);
             return new ResponseDTO<>(ResponseCode.SUCCESS_UPDATE_KID, updateKid);
         } catch (Exception e) {
