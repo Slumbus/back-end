@@ -67,6 +67,16 @@ public class UserController {
                 .body(new ResponseDTO<>(ResponseCode.SUCCESS_CHECK_CODE, response));
     }
 
+    @GetMapping("/check-code-password")
+    public ResponseEntity verificationEmailAndFindPassword(@RequestParam("email") String email,
+                                            @RequestParam("code") String authCode) {
+        boolean response = registerService.verifiedCodeToFindPassword(email, authCode);
+
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_CHECK_CODE.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_CHECK_CODE, response));
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserRequestDTO userDto) {
         try{

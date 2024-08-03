@@ -2,6 +2,7 @@ package com.firefly.slumbus.user.service;
 
 import com.firefly.slumbus.base.exception.BadRequestException;
 import com.firefly.slumbus.base.exception.ConflictException;
+import com.firefly.slumbus.base.exception.UserNotFoundException;
 import com.firefly.slumbus.user.dto.request.UserRequestDTO;
 import com.firefly.slumbus.user.entity.UserEntity;
 import com.firefly.slumbus.user.repository.UserRepository;
@@ -17,8 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
-import static com.firefly.slumbus.base.code.ErrorCode.DUPLICATE_USER;
-import static com.firefly.slumbus.base.code.ErrorCode.INVALID_MAIL_CODE;
+import static com.firefly.slumbus.base.code.ErrorCode.*;
 
 @Service
 public class RegisterService {
@@ -75,6 +75,18 @@ public class RegisterService {
     }
 
     /**
+     *  가입된 회원 찾기
+     */
+
+    private void findMember(String email) {
+        Optional<UserEntity> existingUser = userRepository.findByEmail(email);
+
+        if (existingUser.isEmpty()) {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
+    }
+
+    /**
      * 이메일 인증
      */
     public void sendCodeToEmail(String toEmail) {
@@ -114,6 +126,18 @@ public class RegisterService {
 
     public boolean verifiedCode(String email, String authCode) {
         this.validateDuplicateMember(email);
+        String redisAuthCode = redisService.getValues(email);
+        boolean authResult = redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(authCode);
+
+        if (!authResult) {
+            throw new BadRequestException(INVALID_MAIL_CODE);
+        } else {
+            return true;
+        }
+    }
+
+    public boolean verifiedCodeToFindPassword(String email, String authCode) {
+        this.findMember(email);
         String redisAuthCode = redisService.getValues(email);
         boolean authResult = redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(authCode);
 
