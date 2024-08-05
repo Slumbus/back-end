@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LyricsRequestDTO {
 
-    private String kidName;
+    private String lyrics;
 }
