@@ -73,7 +73,16 @@ public class MusicController {
         return new ResponseDTO<>(ResponseCode.SUCCESS_GET_MUSIC_DETAIL, musicDetails);
     }
 
-    // 자장가 목록 조회
+    // 내가 만든 자장가 목록 조회
+    @GetMapping("/list")
+    public ResponseDTO<List<MusicResponseDTO>> getMusicList() {
+
+        List<MusicResponseDTO> musicList = musicService.getMusicList();
+
+        return new ResponseDTO<>(ResponseCode.SUCCESS_GET_MUSIC_LIST, musicList);
+    }
+
+    // 아이별 자장가 목록 조회
     @GetMapping("/list/{kidId}")
     public ResponseDTO<List<MusicResponseDTO>> getMusicListByKidId(@PathVariable("kidId") Long kidId) {
 

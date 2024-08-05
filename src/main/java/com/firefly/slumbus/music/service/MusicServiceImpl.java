@@ -83,6 +83,27 @@ public class MusicServiceImpl implements MusicService {
                 .build();
     }
 
+    public List<MusicResponseDTO> getMusicList() {
+
+        Long userId = getCurrentUserId();
+
+        Optional<UserEntity> user = userRepository.findById(userId);
+        List<MusicEntity> musicList = musicRepository.findByUser(user.get());
+
+        return musicList.stream()
+                .map(music -> MusicResponseDTO.builder()
+                        .userId(music.getUser().getUserId())
+                        .kidId(music.getKid().getKidId())
+                        .id(music.getMusicId())
+                        .kidName(music.getKid().getName())
+                        .url(music.getMusic())
+                        .title(music.getTitle())
+                        .artwork(music.getPicture())
+                        .lyric(music.getLyric())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
     public List<MusicResponseDTO> getMusicListByKidId(Long kidId) {
 
         Optional<KidEntity> kid = kidRepository.findById(kidId);
