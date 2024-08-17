@@ -26,4 +26,6 @@ public class MusicResponseDTO {
     private String artwork;
 
     private String lyric;
+
+    private Long originMusicId;
 }
