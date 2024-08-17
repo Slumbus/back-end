@@ -48,4 +48,7 @@ public class MusicEntity {
 
     @OneToMany(mappedBy = "music", cascade = CascadeType.REMOVE)
     private List<ReactionEntity> reactions;
+
+    @Column
+    private Long originMusicId;
 }

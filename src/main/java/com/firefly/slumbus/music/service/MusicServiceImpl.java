@@ -98,6 +98,7 @@ public class MusicServiceImpl implements MusicService {
                         .title(music.getTitle())
                         .artwork(music.getPicture())
                         .lyric(music.getLyric())
+                        .originMusicId(music.getOriginMusicId())
                         .build())
                 .collect(Collectors.toList());
     }
