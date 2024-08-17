@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -63,6 +65,24 @@ public class S3Service {
 
         try {
             amazonS3.putObject(new PutObjectRequest(bucket, fileName, music.getInputStream(), objectMetadata));
+        } catch(IOException e) {
+            throw new InternalServerException(S3_MUSIC_UPLOAD_ERROR);
+        }
+
+        return fileUrl;
+    }
+
+    public String uploadFile(File music) {
+
+        String fileName = createFileName("music/", music.getName());
+        String fileUrl = amazonS3.getUrl(bucket, fileName).toString();
+
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(music.length());
+        objectMetadata.setContentType("audio/mp3");
+
+        try (FileInputStream inputStream = new FileInputStream(music)) {
+            amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata));
         } catch(IOException e) {
             throw new InternalServerException(S3_MUSIC_UPLOAD_ERROR);
         }
