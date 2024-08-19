@@ -44,28 +44,53 @@ public class MusicServiceImpl implements MusicService {
         UserEntity findUser = userRepository.findById(userId).get();
         KidEntity findKid = kidRepository.findById(musicDTO.getKidId()).get();
 
-        MusicEntity music = MusicEntity.builder()
-                .user(findUser)
-                .kid(findKid)
-                .music(musicDTO.getMusic())
-                .title(musicDTO.getTitle())
-                .picture(musicDTO.getPicture())
-                .lyric(musicDTO.getLyric())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
+        if (musicDTO.getPicture() == null){
+            MusicEntity music = MusicEntity.builder()
+                    .user(findUser)
+                    .kid(findKid)
+                    .music(musicDTO.getMusic())
+                    .title(musicDTO.getTitle())
+                    .picture("https://slumbus.s3.ap-southeast-2.amazonaws.com/music/slumbus_logo.png")
+                    .lyric(musicDTO.getLyric())
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
+                    .build();
 
-        musicRepository.save(music);
+            musicRepository.save(music);
 
-        return MusicResponseDTO.builder()
-                .userId(findUser.getUserId())
-                .kidId(findKid.getKidId())
-                .id(music.getMusicId())
-                .url(musicDTO.getMusic())
-                .title(musicDTO.getTitle())
-                .artwork(musicDTO.getPicture())
-                .lyric(musicDTO.getLyric())
-                .build();
+            return MusicResponseDTO.builder()
+                    .userId(findUser.getUserId())
+                    .kidId(findKid.getKidId())
+                    .id(music.getMusicId())
+                    .url(musicDTO.getMusic())
+                    .title(musicDTO.getTitle())
+                    .artwork("https://slumbus.s3.ap-southeast-2.amazonaws.com/music/slumbus_logo.png")
+                    .lyric(musicDTO.getLyric())
+                    .build();
+        } else {
+            MusicEntity music = MusicEntity.builder()
+                    .user(findUser)
+                    .kid(findKid)
+                    .music(musicDTO.getMusic())
+                    .title(musicDTO.getTitle())
+                    .picture(musicDTO.getPicture())
+                    .lyric(musicDTO.getLyric())
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
+                    .build();
+
+            musicRepository.save(music);
+
+            return MusicResponseDTO.builder()
+                    .userId(findUser.getUserId())
+                    .kidId(findKid.getKidId())
+                    .id(music.getMusicId())
+                    .url(musicDTO.getMusic())
+                    .title(musicDTO.getTitle())
+                    .artwork(musicDTO.getPicture())
+                    .lyric(musicDTO.getLyric())
+                    .build();
+        }
     }
 
     public MusicResponseDTO getMusicDetails(Long musicId) {
