@@ -84,6 +84,7 @@ public class MusicServiceImpl implements MusicService {
             return MusicResponseDTO.builder()
                     .userId(findUser.getUserId())
                     .kidId(findKid.getKidId())
+                    .kidName(findKid.getName())
                     .id(music.getMusicId())
                     .url(musicDTO.getMusic())
                     .title(musicDTO.getTitle())
