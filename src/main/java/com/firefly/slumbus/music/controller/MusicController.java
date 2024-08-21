@@ -6,6 +6,7 @@ import com.firefly.slumbus.base.code.ResponseCode;
 import com.firefly.slumbus.base.config.S3Service;
 import com.firefly.slumbus.base.dto.ResponseDTO;
 import com.firefly.slumbus.music.dto.*;
+import com.firefly.slumbus.music.service.CombineService;
 import com.firefly.slumbus.music.service.MusicService;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -35,6 +38,8 @@ public class MusicController {
 
     private final MusicService musicService;
     private final S3Service s3Service;
+
+    private final CombineService combineService;
 
     // 작곡 후 저장
     @PostMapping("/composition")
@@ -191,4 +196,17 @@ public class MusicController {
                 .body(new ResponseDTO<>(ResponseCode.SUCCESS_COMPOSE_MUSIC, music));
     }
 
+    // 음원 합성
+    @PostMapping("/combine")
+    public String combineAudio(@RequestParam("musicUrl") String musicUrl, @RequestPart("recordedFile") MultipartFile recordedFile) throws IOException {
+        File recordedTempFile = File.createTempFile("voice", ".mp3");
+        recordedFile.transferTo(recordedTempFile);
+
+        String combineMusicUrl = combineService.combineAudioFiles(musicUrl, recordedTempFile);
+
+        // 임시 파일 삭제
+        recordedTempFile.delete();
+
+        return combineMusicUrl;
+    }
 }
