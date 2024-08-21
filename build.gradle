@@ -52,8 +52,12 @@ dependencies {
 	// aws-s3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
-	//json
+	// json
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
+	// 음원 합성
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.523'
+	implementation 'com.github.kokorin.jaffree:jaffree:2023.09.10'
 }
 
 tasks.named('test') {
