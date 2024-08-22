@@ -127,16 +127,16 @@ public class MusicController {
         return new ResponseDTO<>(ResponseCode.SUCCESS_PUT_LYRIC, updatedMusic);
     }
 
-    // 자장가 최종 음악(가사 녹음 합본) 저장
-    @PatchMapping("/update/{musicId}")
-    public ResponseDTO<MusicResponseDTO> updateMusicColumn(@PathVariable("musicId") Long musicId, @RequestPart("musicFile") MultipartFile musicFile) {
-
-        String musicURL = s3Service.uploadMusic(musicFile);
-
-        MusicResponseDTO updatedMusic = musicService.updateMusicColumn(musicId, musicURL);
-
-        return new ResponseDTO<>(ResponseCode.SUCCESS_SAVE_COMPLETE_MUSIC, updatedMusic);
-    }
+//    // 자장가 최종 음악(가사 녹음 합본) 저장
+//    @PatchMapping("/update/{musicId}")
+//    public ResponseDTO<MusicResponseDTO> updateMusicColumn(@PathVariable("musicId") Long musicId, @RequestParam("musicUrl") String musicUrl) {
+//
+////        String musicURL = s3Service.uploadMusic(musicFile);
+//
+//        MusicResponseDTO updatedMusic = musicService.updateMusicColumn(musicId, musicUrl);
+//
+//        return new ResponseDTO<>(ResponseCode.SUCCESS_SAVE_COMPLETE_MUSIC, updatedMusic);
+//    }
 
     // chatGPT 통해 가사 생성
     @PostMapping("/genLyrics")
@@ -196,9 +196,10 @@ public class MusicController {
                 .body(new ResponseDTO<>(ResponseCode.SUCCESS_COMPOSE_MUSIC, music));
     }
 
-    // 음원 합성
-    @PostMapping("/combine")
-    public String combineAudio(@RequestParam("musicUrl") String musicUrl, @RequestPart("recordedFile") MultipartFile recordedFile) throws IOException {
+    // 음원 합성 & 녹음본 저장
+    @PostMapping("/combine/{musicId}")
+    public ResponseDTO<MusicResponseDTO> combineAudio(@PathVariable("musicId") Long musicId, @RequestParam("musicUrl") String musicUrl, @RequestPart("recordedFile") MultipartFile recordedFile) throws IOException {
+
         File recordedTempFile = File.createTempFile("voice", ".mp3");
         recordedFile.transferTo(recordedTempFile);
 
@@ -207,6 +208,10 @@ public class MusicController {
         // 임시 파일 삭제
         recordedTempFile.delete();
 
-        return combineMusicUrl;
+        // 저장
+        MusicResponseDTO updatedMusic = musicService.updateMusicColumn(musicId, combineMusicUrl);
+
+        return new ResponseDTO<>(ResponseCode.SUCCESS_SAVE_COMPLETE_MUSIC, updatedMusic);
     }
+
 }

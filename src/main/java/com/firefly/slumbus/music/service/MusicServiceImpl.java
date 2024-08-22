@@ -201,6 +201,7 @@ public class MusicServiceImpl implements MusicService {
         MusicEntity music = musicRepository.findById(musicId).orElseThrow(() -> new RuntimeException("Music not found"));
 
         music.setMusic(musicLink);
+        music.setOriginMusicId(musicId);
         musicRepository.save(music);
 
         return MusicResponseDTO.builder()
@@ -212,6 +213,7 @@ public class MusicServiceImpl implements MusicService {
                 .title(music.getTitle())
                 .artwork(music.getPicture())
                 .lyric(music.getLyric())
+                .originMusicId(music.getOriginMusicId())
                 .build();
     }
 
