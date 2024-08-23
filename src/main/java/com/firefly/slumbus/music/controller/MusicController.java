@@ -99,14 +99,25 @@ public class MusicController {
     // 자장가 수정(제목, 앨범자켓)
     @PutMapping("/{musicId}")
     public ResponseDTO<MusicResponseDTO> updateMusic(@PathVariable("musicId") Long musicId,
-                                                     @RequestPart("musicDTO") MusicRequestDTO musicRequestDTO,
-                                                     @RequestPart("image") MultipartFile albumImage) {
+                                                     @RequestParam("musicDTO") String musicDTOString,
+                                                     @RequestParam(value = "image", required = false) MultipartFile albumImage) {
 
-        String imageURL = s3Service.uploadImage(albumImage);
-        musicRequestDTO.setPicture(imageURL);
-        MusicResponseDTO updatedMusic = musicService.updateMusic(musicId, musicRequestDTO);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            MusicRequestDTO musicRequestDTO = mapper.readValue(musicDTOString, MusicRequestDTO.class);
 
-        return new ResponseDTO<>(ResponseCode.SUCCESS_UPDATE_MUSIC, updatedMusic);
+            String imageURL = null;
+            if (albumImage != null && !albumImage.isEmpty()) {
+                imageURL = s3Service.uploadImage(albumImage);
+            }
+            musicRequestDTO.setPicture(imageURL);
+            MusicResponseDTO updatedMusic = musicService.updateMusic(musicId, musicRequestDTO);
+
+            return new ResponseDTO<>(ResponseCode.SUCCESS_UPDATE_MUSIC, updatedMusic);
+        } catch (Exception e) {
+            String message = e.getMessage();
+            return new ResponseDTO<>(0, "실패", message, null);
+        }
     }
 
     // 자장가 삭제
