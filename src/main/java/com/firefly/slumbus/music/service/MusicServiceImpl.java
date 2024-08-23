@@ -153,21 +153,39 @@ public class MusicServiceImpl implements MusicService {
     public MusicResponseDTO updateMusic(Long musicId, MusicRequestDTO musicDTO) {
         MusicEntity music = musicRepository.findById(musicId).orElseThrow(() -> new RuntimeException("Music Not found"));
 
-        music.setTitle(musicDTO.getTitle());
-        music.setPicture(musicDTO.getPicture());
+        if (musicDTO.getPicture() == null){
+            music.setTitle(musicDTO.getTitle());
+            music.setPicture("https://slumbus.s3.ap-southeast-2.amazonaws.com/music/slumbus_logo.png");
 
-        musicRepository.save(music);
+            musicRepository.save(music);
 
-        return MusicResponseDTO.builder()
-                .userId(music.getUser().getUserId())
-                .kidId(music.getKid().getKidId())
-                .id(music.getMusicId())
-                .kidName(music.getKid().getName())
-                .url(music.getMusic())
-                .title(music.getTitle())
-                .artwork(music.getPicture())
-                .lyric(music.getLyric())
-                .build();
+            return MusicResponseDTO.builder()
+                    .userId(music.getUser().getUserId())
+                    .kidId(music.getKid().getKidId())
+                    .id(music.getMusicId())
+                    .kidName(music.getKid().getName())
+                    .url(music.getMusic())
+                    .title(music.getTitle())
+                    .artwork("https://slumbus.s3.ap-southeast-2.amazonaws.com/music/slumbus_logo.png")
+                    .lyric(music.getLyric())
+                    .build();
+        } else {
+            music.setTitle(musicDTO.getTitle());
+            music.setPicture(musicDTO.getPicture());
+
+            musicRepository.save(music);
+
+            return MusicResponseDTO.builder()
+                    .userId(music.getUser().getUserId())
+                    .kidId(music.getKid().getKidId())
+                    .id(music.getMusicId())
+                    .kidName(music.getKid().getName())
+                    .url(music.getMusic())
+                    .title(music.getTitle())
+                    .artwork(music.getPicture())
+                    .lyric(music.getLyric())
+                    .build();
+        }
     }
 
     public void deleteMusic(Long musicId) {
