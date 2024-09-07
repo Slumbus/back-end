@@ -23,6 +23,12 @@ public class ReactionContoller {
         return new ResponseDTO<>(ResponseCode.SUCCESS_SAVE_REACTION, reaction);
     }
 
+    @GetMapping("/kid/{kidId}/music/{musicId}")
+    public ResponseDTO<ReactionListResponseDTO> getReactionListByMusic(@PathVariable Long kidId, @PathVariable Long musicId) {
+        ReactionListResponseDTO reactionList = reactionService.getReactionListByMusic(kidId, musicId);
+        return new ResponseDTO<>(ResponseCode.SUCCESS_GET_REACTION_LIST, reactionList);
+    }
+
     @GetMapping("/kid/{kidId}")
     public ResponseDTO<List<ReactionListResponseDTO>> getReactionList(@PathVariable Long kidId) {
         List<ReactionListResponseDTO> reactionList = reactionService.getReactionList(kidId);
