@@ -110,4 +110,35 @@ public class ReactionServiceImpl implements ReactionService {
                 })
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public ReactionListResponseDTO getReactionListByMusic(Long kidId, Long musicId) {
+        List<ReactionEntity> reactions = reactionRepository.findByKid_KidId(kidId);
+
+        List<ReactionEntity> reactionsByMusic = reactions.stream()
+                .filter(reaction -> reaction.getMusic().getMusicId().equals(musicId))
+                .toList();
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        MusicEntity music = reactionsByMusic.get(0).getMusic();
+
+        List<ReactionListResponseDTO.ReactionDetailDTO> reactionDetails = reactionsByMusic.stream()
+                .map(reaction -> ReactionListResponseDTO.ReactionDetailDTO.builder()
+                        .reactId(reaction.getReactId())
+                        .emoji(reaction.getEmoji())
+                        .comment(reaction.getComment())
+                        .createdAt(reaction.getCreatedAt().format(dateTimeFormatter))
+                        .build())
+                .collect(Collectors.toList());
+
+        return
+                ReactionListResponseDTO.builder()
+                        .kidId(kidId)
+                        .musicId(musicId)
+                        .musicTitle(music.getTitle())
+                        .reactions(reactionDetails)
+                        .build()
+        ;
+    }
 }
