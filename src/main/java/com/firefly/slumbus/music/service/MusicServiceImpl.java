@@ -12,6 +12,7 @@ import com.firefly.slumbus.user.entity.UserEntity;
 import com.firefly.slumbus.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +36,9 @@ public class MusicServiceImpl implements MusicService {
     private final KidRepository kidRepository;
     private final MusicRepository musicRepository;
     private final WebClient.Builder webClientBuilder;
+
+    @Value("${aiServer.apiUrl}")
+    private String apiUrl;
 
 
     public MusicResponseDTO saveMusic(MusicRequestDTO musicDTO) {
@@ -266,7 +270,7 @@ public class MusicServiceImpl implements MusicService {
 
     @Override
     public String makeMusic(String mood, String instrument, MultipartFile humming) {
-        String url = "http://127.0.0.1:5000/compose/music";
+        String url = apiUrl + "/compose/music";
 
         WebClient webClient = webClientBuilder.baseUrl(url).build();
 

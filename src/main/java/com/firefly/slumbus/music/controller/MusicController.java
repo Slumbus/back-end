@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,9 @@ import static com.firefly.slumbus.base.UserAuthorizationUtil.getCurrentUserId;
 @RequestMapping("/api/song")
 public class MusicController {
 
-    private static final String FLASK_API_URL = "http://localhost:5000/lyrics/write";
+    @Value("${aiServer.apiUrl}")
+    private String apiUrl;
+
     private final ObjectMapper objectMapper;
 
     private final MusicService musicService;
@@ -164,7 +167,7 @@ public class MusicController {
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters()
                     .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
-            ResponseEntity<String> response = restTemplate.postForEntity(FLASK_API_URL, entity, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(apiUrl + "/lyrics/write", entity, String.class);
 
             if (response.getStatusCode() == HttpStatus.OK) {
                 return ResponseEntity.ok()
