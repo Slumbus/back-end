@@ -212,7 +212,7 @@ public class MusicController {
 
     // 음원 합성 & 녹음본 저장
     @PostMapping("/combine/{musicId}")
-    public ResponseDTO<MusicResponseDTO> combineAudio(@PathVariable("musicId") Long musicId, @RequestParam("musicUrl") String musicUrl, @RequestPart("recordedFile") MultipartFile recordedFile) throws IOException {
+    public ResponseDTO<MusicResponseDTO> combineAudio(@PathVariable("musicId") Long musicId, @RequestParam("musicUrl") String musicUrl, @RequestPart("recordedFile") MultipartFile recordedFile) throws IOException, InterruptedException {
 
         File recordedTempFile = File.createTempFile("voice", ".mp3");
         recordedFile.transferTo(recordedTempFile);
